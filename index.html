@@ -361,6 +361,9 @@ var AUTH={adminPass:'admin123',mgrPass:'manage123',teamPass:'team123',timeout:10
   team:{dashboard:true,analysis:true,crmActivity:false,quotations:true,quotesList:true,quotesEdit:false,quotesPdf:false,quoteReport:false,coa:false,coaEdit:false,coaPdf:false,po:false,poEdit:false,poPdf:false,sales:false,salesEdit:false,addInquiry:true,editInquiry:true,del:false,export:false}
 }};
 function roleLabel(r){return r==='admin'?'Admin':r==='mgr'?'Management':r==='team'?'Team':'';}
+/* ▼ The 3 Firebase login accounts. These MUST match the emails you created in Firebase → Authentication → Users. Edit if yours differ. ▼ */
+var AUTH_EMAILS={admin:'admin@ksapallets.app',mgr:'management@ksapallets.app',team:'team@ksapallets.app'};
+function emailRole(email){email=(email||'').toLowerCase();for(var k in AUTH_EMAILS){if(AUTH_EMAILS[k].toLowerCase()===email)return k;}return null;}
 var _idleTimer=null,_lastActiveWrite=0;
 function markActive(){try{var n=Date.now();localStorage.setItem('ksaLastActive',String(n));_lastActiveWrite=n;}catch(e){}}
 function resetIdle(){ if(!state.role)return; try{var n=Date.now();if(n-_lastActiveWrite>15000){localStorage.setItem('ksaLastActive',String(n));_lastActiveWrite=n;}}catch(e){} if(_idleTimer)clearTimeout(_idleTimer); var mins=(AUTH.timeout&&AUTH.timeout>0)?AUTH.timeout:0; if(!mins)return; _idleTimer=setTimeout(lockSession,mins*60*1000); }
@@ -372,7 +375,7 @@ function showLogin(err){ var g=document.getElementById('authgate'); if(!g)return
   g.innerHTML='<div style="width:100%;max-width:340px;padding:30px 26px;background:#fff;border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.4);">'
     +'<div style="text-align:center;margin-bottom:8px;"><img src="'+LOGO+'" style="height:54px;"/></div>'
     +'<div style="text-align:center;font-weight:800;font-size:17px;">KSA Pallets</div>'
-    +'<div style="text-align:center;font-size:12.5px;color:var(--muted);margin-bottom:20px;">Follow-up System — sign in</div>'
+    +'<div style="text-align:center;font-size:12.5px;color:var(--muted);margin-bottom:20px;">Follow-up System — secure sign in</div>'
     +'<label class="field-label">Password</label><input type="password" id="login_pass" placeholder="Enter password" style="width:100%;"/>'
     +(err?'<div style="color:var(--overdue);font-size:12px;margin-top:8px;">'+esc(err)+'</div>':'')
     +'<button class="btn btn-primary" data-login="1" style="width:100%;margin-top:16px;justify-content:center;">Sign in</button>'
@@ -392,7 +395,7 @@ function saveAuthCfg(){ var g=function(id){var e=document.getElementById(id);ret
 }
 var LOG_CHANNELS=['WhatsApp','Call','Email','Physical visit','SMS'];
 var LOG_REMARKS=['No update from client','No response','Client will confirm soon','Asked for revised price','Requirement on hold','Follow up next week','Sent reminder','Spoke to client — positive','Client busy — call later'];
-function applySettings(s){ if(!s)return; if(Array.isArray(s.products)&&s.products.length)PRODUCTS=s.products; if(Array.isArray(s.locations)&&s.locations.length)LOCATIONS=s.locations; if(Array.isArray(s.sources)&&s.sources.length)SOURCES=s.sources; if(Array.isArray(s.schedule)&&s.schedule.length)SCHEDULE=s.schedule; if(s.owner){OWNER=s.owner;} if(s.wonInterval>0)REORDER_DAYS=s.wonInterval; if(s.lostInterval>0)REENGAGE_DAYS=s.lostInterval; if(s.qvat>=0)QVAT=s.qvat; if(Array.isArray(s.qterms)&&s.qterms.length)QUOTE_TERMS=s.qterms; if(s.qbank)QUOTE_BANK=s.qbank; if(s.qvatno)QUOTE_VATNO=s.qvatno; if(s.qfrom)QUOTE_FROM=Object.assign({},QUOTE_FROM,s.qfrom); if(Array.isArray(s.coldSchedule)&&s.coldSchedule.length)COLD_SCHEDULE=s.coldSchedule; if(s.coldTargets)COLD_TARGETS=Object.assign({},COLD_TARGETS,s.coldTargets); if(Array.isArray(s.coldRegions)&&s.coldRegions.length)COLD_REGIONS=s.coldRegions; if(s.coldGap>0)COLD_GAP=s.coldGap; if(s.auth){ if(s.auth.adminPass)AUTH.adminPass=s.auth.adminPass; if(s.auth.mgrPass)AUTH.mgrPass=s.auth.mgrPass; if(s.auth.teamPass)AUTH.teamPass=s.auth.teamPass; if(typeof s.auth.timeout==='number')AUTH.timeout=s.auth.timeout; if(s.auth.perms){ if(s.auth.perms.mgr)AUTH.perms.mgr=Object.assign({},AUTH.perms.mgr,s.auth.perms.mgr); if(s.auth.perms.team)AUTH.perms.team=Object.assign({},AUTH.perms.team,s.auth.perms.team); } } if(s.coaSignatory)COA_SIGNATORY=s.coaSignatory; if(s.coaTitle)COA_TITLE=s.coaTitle; if(s.coaStmt)COA_STMT=s.coaStmt; if(Array.isArray(s.poTerms)&&s.poTerms.length)PO_TERMS=s.poTerms; if(s.poVat>=0)PO_VAT=s.poVat; if(s.poDelivery!=null)PO_DELIVERY=s.poDelivery; if(Array.isArray(s.logChannels)&&s.logChannels.length)LOG_CHANNELS=s.logChannels; if(Array.isArray(s.logRemarks)&&s.logRemarks.length)LOG_REMARKS=s.logRemarks; }
+function applySettings(s){ if(!s)return; if(Array.isArray(s.products)&&s.products.length)PRODUCTS=s.products; if(Array.isArray(s.locations)&&s.locations.length)LOCATIONS=s.locations; if(Array.isArray(s.sources)&&s.sources.length)SOURCES=s.sources; if(Array.isArray(s.schedule)&&s.schedule.length)SCHEDULE=s.schedule; if(s.owner){OWNER=s.owner;} if(s.wonInterval>0)REORDER_DAYS=s.wonInterval; if(s.lostInterval>0)REENGAGE_DAYS=s.lostInterval; if(s.qvat>=0)QVAT=s.qvat; if(Array.isArray(s.qterms)&&s.qterms.length)QUOTE_TERMS=s.qterms; if(s.qbank)QUOTE_BANK=s.qbank; if(s.qvatno)QUOTE_VATNO=s.qvatno; if(s.qfrom)QUOTE_FROM=Object.assign({},QUOTE_FROM,s.qfrom); if(Array.isArray(s.coldSchedule)&&s.coldSchedule.length)COLD_SCHEDULE=s.coldSchedule; if(s.coldTargets)COLD_TARGETS=Object.assign({},COLD_TARGETS,s.coldTargets); if(Array.isArray(s.coldRegions)&&s.coldRegions.length)COLD_REGIONS=s.coldRegions; if(s.coldGap>0)COLD_GAP=s.coldGap; if(s.auth){ if(s.auth.adminPass)AUTH.adminPass=s.auth.adminPass; if(s.auth.mgrPass)AUTH.mgrPass=s.auth.mgrPass; if(s.auth.teamPass)AUTH.teamPass=s.auth.teamPass; if(typeof s.auth.timeout==='number'){AUTH.timeout=s.auth.timeout;try{localStorage.setItem('ksaTimeout',String(s.auth.timeout));}catch(e){}} if(s.auth.perms){ if(s.auth.perms.mgr)AUTH.perms.mgr=Object.assign({},AUTH.perms.mgr,s.auth.perms.mgr); if(s.auth.perms.team)AUTH.perms.team=Object.assign({},AUTH.perms.team,s.auth.perms.team); } } if(s.coaSignatory)COA_SIGNATORY=s.coaSignatory; if(s.coaTitle)COA_TITLE=s.coaTitle; if(s.coaStmt)COA_STMT=s.coaStmt; if(Array.isArray(s.poTerms)&&s.poTerms.length)PO_TERMS=s.poTerms; if(s.poVat>=0)PO_VAT=s.poVat; if(s.poDelivery!=null)PO_DELIVERY=s.poDelivery; if(Array.isArray(s.logChannels)&&s.logChannels.length)LOG_CHANNELS=s.logChannels; if(Array.isArray(s.logRemarks)&&s.logRemarks.length)LOG_REMARKS=s.logRemarks; }
 function currentSettings(){ return {products:PRODUCTS,locations:LOCATIONS,sources:SOURCES,schedule:SCHEDULE,owner:OWNER,wonInterval:REORDER_DAYS,lostInterval:REENGAGE_DAYS,qvat:QVAT,qterms:QUOTE_TERMS,qbank:QUOTE_BANK,qvatno:QUOTE_VATNO,qfrom:QUOTE_FROM,coldSchedule:COLD_SCHEDULE,coldTargets:COLD_TARGETS,coldRegions:COLD_REGIONS,coldGap:COLD_GAP,auth:AUTH,coaSignatory:COA_SIGNATORY,coaTitle:COA_TITLE,coaStmt:COA_STMT,poTerms:PO_TERMS,poVat:PO_VAT,poDelivery:PO_DELIVERY,logChannels:LOG_CHANNELS,logRemarks:LOG_REMARKS}; }
 function reorderNext(c){ if(!c.reorder||!c.reorder.from)return null; return addDays(c.reorder.last||c.reorder.from,REORDER_DAYS); }
 function reengageNext(c){ if(!c.reengage||!c.reengage.from)return null; return addDays(c.reengage.last||c.reengage.from,REENGAGE_DAYS); }
@@ -2785,7 +2788,6 @@ if(window.KSA_READY) boot(); else window.addEventListener('ksa-ready', boot);
   import { getDatabase, ref, get, set, onValue }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-  /* ▼▼▼ PASTE YOUR CONFIG BETWEEN THE BRACES ▼▼▼ */
   const firebaseConfig = {
     apiKey:            "AIzaSyBOsMVm-DkXYluo@adqxuRw8IGyHOEX-Ys",
     authDomain:        "ksa-pallets-follow-up-system.firebaseapp.com",
@@ -2795,7 +2797,6 @@ if(window.KSA_READY) boot(); else window.addEventListener('ksa-ready', boot);
     messagingSenderId: "506816310101",
     appId:             "1:506816310101:web:d96186f5aa5a1679515ddc"
   };
-  /* ▲▲▲ PASTE YOUR CONFIG BETWEEN THE BRACES ▲▲▲ */
 
   function ready(){ window.KSA_READY=true; window.dispatchEvent(new Event('ksa-ready')); }
 
