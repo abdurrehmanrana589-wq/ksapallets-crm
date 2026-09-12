@@ -102,12 +102,12 @@
   select.fancy{display:none;}
   .dd{position:relative;min-width:150px;}
   .dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#FBFCFD;border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:14px;color:var(--ink);font-family:inherit;cursor:pointer;text-align:left;transition:.15s;line-height:1.2;}
-  .dd-btn:hover{border-color:#CFD4DB;}
-  .dd-btn.open,.dd-btn:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentBg);outline:none;}
-  .dd-btn .dd-lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .dd-btn svg{color:var(--muted);flex-shrink:0;transition:transform .2s;}
+  .dd-btn:hover{border-color:var(--accent);background:#FEFCF6;}
+  .dd-btn.open,.dd-btn:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accentBg);outline:none;background:#fff;}
+  .dd-btn .dd-lab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;}
+  .dd-btn svg{color:var(--accent);flex-shrink:0;transition:transform .2s;}
   .dd-btn.open svg{transform:rotate(180deg);}
-  .dd-panel{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:0 16px 42px rgba(20,28,40,.18);padding:6px;z-index:40;display:none;max-height:270px;overflow:auto;min-width:180px;}
+  .dd-panel{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:0 18px 46px rgba(20,28,40,.20);padding:6px;z-index:40;display:none;max-height:280px;overflow:auto;min-width:180px;}
   .dd-panel.open{display:block;}
   .dd-opt{padding:9px 12px;border-radius:9px;font-size:13.5px;cursor:pointer;color:var(--ink2);white-space:nowrap;transition:.1s;}
   .dd-opt:hover{background:var(--accentBg);color:var(--accentDk);}
@@ -223,9 +223,11 @@
   .wlinks{display:flex;gap:2px;}
   .wdo{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
   .wch{width:120px;}
-  .natsel{padding:9px 30px 9px 12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:12.5px;background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238A93A2' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 10px center;-webkit-appearance:none;appearance:none;color:var(--ink);max-width:220px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
-  .natsel:hover{border-color:#C7CDD6;}
+  .natsel{padding:10px 34px 10px 13px;border:1px solid var(--line);border-radius:11px;font-family:inherit;font-size:13px;font-weight:500;background-color:#fff;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23B88610' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");background-repeat:no-repeat;background-position:right 12px center;background-size:12px;-webkit-appearance:none;appearance:none;color:var(--ink);max-width:240px;cursor:pointer;transition:border-color .15s,box-shadow .15s,background-color .15s;}
+  .natsel:hover{border-color:var(--accent);background-color:#FEFCF6;}
   .natsel:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accentBg);}
+  .filterbar select.natsel{background-color:#FBFCFD;min-width:150px;}
+  .filterbar select.natsel:hover{background-color:#fff;}
   .hometile{transition:transform .14s ease,box-shadow .14s ease,border-color .14s ease;}
   .hometile:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(20,25,40,.14)!important;border-color:var(--accent)!important;}
   .homehero{background:linear-gradient(120deg,#252736 0%,#33374a 55%,#B88610 190%);color:#fff;border-radius:22px;padding:30px 32px;position:relative;overflow:hidden;}
@@ -1490,6 +1492,23 @@ function migrateProspect(p){
 function migrateAllProspects(){state.prospects=toArr(state.prospects).map(migrateProspect);}
 function toArr(x){if(!x)return [];if(Array.isArray(x))return x.filter(function(v){return v!=null;});if(typeof x==='object')return Object.keys(x).map(function(k){return x[k];}).filter(function(v){return v!=null;});return [];}
 function mergeKeep(inc,cur){inc=toArr(inc);return (inc.length===0&&toArr(cur).length>0)?toArr(cur):inc;}
+function mergeClients(incoming,local){
+  incoming=toArr(incoming); local=toArr(local);
+  if(!local.length)return incoming;
+  var byId={}; local.forEach(function(c){if(c&&c.id)byId[c.id]=c;});
+  return incoming.map(function(inc){
+    if(!inc||!inc.id)return inc;
+    var loc=byId[inc.id];
+    if(!loc||!loc.followups)return inc;
+    var f=Object.assign({},inc.followups||{});
+    var changed=false;
+    Object.keys(loc.followups).forEach(function(k){
+      var lr=loc.followups[k], ir=f[k];
+      if(lr&&lr.done&&(!ir||!ir.done)){ f[k]=Object.assign({},ir||{},lr); changed=true; }
+    });
+    return changed?Object.assign({},inc,{followups:f}):inc;
+  });
+}
 
 /* ---------- the ONE contact popup ---------- */
 function hhmm(){return new Date().toTimeString().slice(0,5);}
@@ -2427,7 +2446,7 @@ function resetStepDate(k){
   renderLog();
 }
 function toggleDone(k){readRemarks();var cur=state.logTemp[k]||{};var nd=!cur.done;state.logTemp[k]=Object.assign({},cur,{done:nd,by:nd?(state.me||'—'):undefined,doneDate:nd?today():undefined});renderLog();}
-function saveLog(){readRemarks();var id=state.logId;var d=state.logTemp;var done=0;SCHEDULE.forEach(function(s){if(d[s.k]&&d[s.k].done)done++;});logAct('Updated follow-ups',cname(id),done+' completed',id);var nsEl=document.querySelector('[data-nsreason]');var roEl=document.querySelector('[data-reorderfrom]');var reEl=document.querySelector('[data-reengagefrom]');var cur=state.clients.find(function(x){return x.id===id;});var extra={followups:d};if(nsEl)extra.notSubmittedReason=nsEl.value;if(roEl)extra.reorder=Object.assign({},cur.reorder||{},{from:roEl.value});if(reEl)extra.reengage=Object.assign({},cur.reengage||{},{from:reEl.value});var obj=Object.assign({},cur,extra);mutate(function(list){return list.map(function(c){return c.id===id?obj:c;});},obj);closeModal();}
+async function saveLog(){readRemarks();var id=state.logId;var d=state.logTemp;var done=0;SCHEDULE.forEach(function(s){if(d[s.k]&&d[s.k].done)done++;});logAct('Updated follow-ups',cname(id),done+' completed',id);var nsEl=document.querySelector('[data-nsreason]');var roEl=document.querySelector('[data-reorderfrom]');var reEl=document.querySelector('[data-reengagefrom]');var cur=state.clients.find(function(x){return x.id===id;});var extra={followups:d};if(nsEl)extra.notSubmittedReason=nsEl.value;if(roEl)extra.reorder=Object.assign({},cur.reorder||{},{from:roEl.value});if(reEl)extra.reengage=Object.assign({},cur.reengage||{},{from:reEl.value});var obj=Object.assign({},cur,extra);state.clients=state.clients.map(function(c){return c.id===id?obj:c;});render();var ok=await apiSaveAll();if(ok===false){toast('\u26a0 Not saved \u2014 check your connection and press Save again.');return;}closeModal();toast('Follow-up saved \u2713');}
 
 function cname(id){var c=state.clients.find(function(x){return x.id===id;});return c?c.company:'';}
 function patch(id,fields){var obj=Object.assign({},state.clients.find(function(x){return x.id===id;}),fields);mutate(function(list){return list.map(function(c){return c.id===id?obj:c;});},obj);}
@@ -2471,7 +2490,7 @@ function actResume(id){logAct('Resumed follow-ups',cname(id),'',id);patch(id,{st
 function actReopen(id){logAct('Reopened',cname(id),'',id);patch(id,{status:'Active',lostReason:''});if(state.logId===id)renderLog();}
 
 /* ---------- mutate + persist ---------- */
-async function mutate(fn,changed){state.clients=fn(state.clients);render();try{await apiSave(changed);}catch(e){alert('Could not save. Check your connection and try again.');}}
+async function mutate(fn,changed){state.clients=fn(state.clients);render();var ok=await apiSave(changed);if(ok===false)toast('\u26a0 Not saved \u2014 check your connection and try again.');}
 async function removeClient(id){var c=state.clients.find(function(x){return x.id===id;});if(!confirm('Delete this inquiry and its follow-up history?'))return;logAct('Deleted inquiry',c?c.company:'','',id);state.clients=state.clients.filter(function(c){return c.id!==id;});render();try{await apiDel(id);}catch(e){}}
 
 /* ---------- export ---------- */
@@ -2535,7 +2554,7 @@ function doExportCSV(){
 
 /* ---------- sync ---------- */
 function setSync(msg){document.getElementById('syncrow').innerHTML='<span style="color:'+(LIVE?'var(--done)':'var(--blue)')+';display:flex;">'+ic('refresh',13)+'</span> '+msg+(LIVE?' <button class="icon-btn" id="btnRefresh" title="Refresh" style="margin-left:2px;">'+ic('refresh',14)+'</button>':'');var b=document.getElementById('btnRefresh');if(b)b.onclick=pull;}
-async function pull(){try{var data=await apiGet()||{};applySettings(data.settings);state.clients=toArr(data.clients);state.activity=toArr(data.activity);state.quotes=toArr(data.quotes);state.prospects=toArr(data.prospects);state.coas=mergeKeep(data.coas,state.coas);state.pos=mergeKeep(data.pos,state.pos);state.sales=mergeKeep(data.sales,state.sales);migrateAllProspects();render();setSync('Live · synced '+stamp()+'.');}catch(e){setSync('Saved locally — sync will retry.');}}
+async function pull(){try{var data=await apiGet()||{};applySettings(data.settings);state.clients=mergeClients(data.clients,state.clients);state.activity=toArr(data.activity);state.quotes=toArr(data.quotes);state.prospects=toArr(data.prospects);state.coas=mergeKeep(data.coas,state.coas);state.pos=mergeKeep(data.pos,state.pos);state.sales=mergeKeep(data.sales,state.sales);migrateAllProspects();render();setSync('Live · synced '+stamp()+'.');}catch(e){setSync('Saved locally — sync will retry.');}}
 
 /* ============================================================ EVENTS ============================================================ */
 document.getElementById('btnAdd').innerHTML=ic('plus',15)+' Add inquiry';
@@ -2768,7 +2787,7 @@ async function boot(){
     LIVE=true;
     document.getElementById('modebadge').textContent='Live · Firebase';
     setSync('Connecting to Firebase…');
-    window.onKsaSnapshot=function(data){ if(!state.modalOpen){ try{ data=data||{}; applySettings(data.settings); state.clients=toArr(data.clients); state.activity=toArr(data.activity); state.quotes=mergeKeep(data.quotes,state.quotes); state.prospects=toArr(data.prospects); state.coas=mergeKeep(data.coas,state.coas); state.pos=mergeKeep(data.pos,state.pos); state.sales=mergeKeep(data.sales,state.sales); migrateAllProspects(); render(); setSync('Live · synced '+stamp()+'.'); }catch(err){ console.error('snapshot render failed:',err); setSync('Loaded — some data needed cleanup.'); } } };
+    window.onKsaSnapshot=function(data){ if(!state.modalOpen){ try{ data=data||{}; applySettings(data.settings); state.clients=mergeClients(data.clients,state.clients); state.activity=toArr(data.activity); state.quotes=mergeKeep(data.quotes,state.quotes); state.prospects=toArr(data.prospects); state.coas=mergeKeep(data.coas,state.coas); state.pos=mergeKeep(data.pos,state.pos); state.sales=mergeKeep(data.sales,state.sales); migrateAllProspects(); render(); setSync('Live · synced '+stamp()+'.'); }catch(err){ console.error('snapshot render failed:',err); setSync('Loaded — some data needed cleanup.'); } } };
     try{ var d=await apiGet()||{}; applySettings(d.settings); state.clients=toArr(d.clients); state.activity=toArr(d.activity); state.quotes=toArr(d.quotes); state.prospects=toArr(d.prospects); state.coas=toArr(d.coas); state.pos=toArr(d.pos); state.sales=toArr(d.sales); migrateAllProspects(); }catch(e){ state.clients=[];state.activity=[];state.quotes=[];state.prospects=[];state.coas=[];state.pos=[];state.sales=[]; }
     render(); setSync('Live · synced '+stamp()+'.'); initAuth();
   } else {
