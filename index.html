@@ -304,6 +304,11 @@ var REENGAGE_DAYS=7;  /* Lost: ask for new requirement every N days */
 /* ---- quotation defaults ---- */
 var QVAT=15;
 var QUOTE_TERMS=['This quotation is valid for a period of 30 days.','All materials delivered within 4 to 5 working days per truck.','Payment will be in advance.','Transportation and handling arranged from client side.','Governed by the laws of the Kingdom of Saudi Arabia.'];
+var QUOTE_PRESETS=[
+ {label:'Transportation',options:['Transportation and handling will be arranged from the client side.','Transportation and handling will be arranged and borne by KSA Pallets (included).','Transportation and handling will be charged separately.']},
+ {label:'Payment terms',options:['Payment will be in advance.','50% advance with the order, balance before delivery.','Payment within 30 days of invoice date.']},
+ {label:'Delivery time',options:['Delivery within 4 to 5 working days per truck.','Delivery within 7 to 10 working days.','Delivery as per mutually agreed schedule.']}
+];
 var QUOTE_BANK={bank:'Saudi National Bank',account:'Zeeta Contracting Co.',acno:'32000000749809',iban:'SA28 1000 0032 0000 0074 9809',swift:'NCBKSAJE'};
 var QUOTE_VATNO='311272428300003';
 var QUOTE_FROM={name:'KSA Pallets — Zeeta Contracting Company',cities:'Al-Dammam · Al-Riyadh · Jeddah, Saudi Arabia',cr:'2050157285',phones:'+966 59 235 4818 / +966 53 830 5770',email:'abdulrehman@ksapallets.com',web:'www.ksapallets.com'};
@@ -397,8 +402,8 @@ function saveAuthCfg(){ var g=function(id){var e=document.getElementById(id);ret
 }
 var LOG_CHANNELS=['WhatsApp','Call','Email','Physical visit','SMS'];
 var LOG_REMARKS=['No update from client','No response','Client will confirm soon','Asked for revised price','Requirement on hold','Follow up next week','Sent reminder','Spoke to client — positive','Client busy — call later'];
-function applySettings(s){ if(!s)return; if(Array.isArray(s.products)&&s.products.length)PRODUCTS=s.products; if(Array.isArray(s.locations)&&s.locations.length)LOCATIONS=s.locations; if(Array.isArray(s.sources)&&s.sources.length)SOURCES=s.sources; if(Array.isArray(s.schedule)&&s.schedule.length)SCHEDULE=s.schedule; if(s.owner){OWNER=s.owner;} if(s.wonInterval>0)REORDER_DAYS=s.wonInterval; if(s.lostInterval>0)REENGAGE_DAYS=s.lostInterval; if(s.qvat>=0)QVAT=s.qvat; if(Array.isArray(s.qterms)&&s.qterms.length)QUOTE_TERMS=s.qterms; if(s.qbank)QUOTE_BANK=s.qbank; if(s.qvatno)QUOTE_VATNO=s.qvatno; if(s.qfrom)QUOTE_FROM=Object.assign({},QUOTE_FROM,s.qfrom); if(Array.isArray(s.coldSchedule)&&s.coldSchedule.length)COLD_SCHEDULE=s.coldSchedule; if(s.coldTargets)COLD_TARGETS=Object.assign({},COLD_TARGETS,s.coldTargets); if(Array.isArray(s.coldRegions)&&s.coldRegions.length)COLD_REGIONS=s.coldRegions; if(s.coldGap>0)COLD_GAP=s.coldGap; if(s.auth){ if(s.auth.adminPass)AUTH.adminPass=s.auth.adminPass; if(s.auth.mgrPass)AUTH.mgrPass=s.auth.mgrPass; if(s.auth.teamPass)AUTH.teamPass=s.auth.teamPass; if(typeof s.auth.timeout==='number'){AUTH.timeout=s.auth.timeout;try{localStorage.setItem('ksaTimeout',String(s.auth.timeout));}catch(e){}} if(s.auth.perms){ if(s.auth.perms.mgr)AUTH.perms.mgr=Object.assign({},AUTH.perms.mgr,s.auth.perms.mgr); if(s.auth.perms.team)AUTH.perms.team=Object.assign({},AUTH.perms.team,s.auth.perms.team); } } if(s.coaSignatory)COA_SIGNATORY=s.coaSignatory; if(s.coaTitle)COA_TITLE=s.coaTitle; if(s.coaStmt)COA_STMT=s.coaStmt; if(Array.isArray(s.poTerms)&&s.poTerms.length)PO_TERMS=s.poTerms; if(s.poVat>=0)PO_VAT=s.poVat; if(s.poDelivery!=null)PO_DELIVERY=s.poDelivery; if(Array.isArray(s.logChannels)&&s.logChannels.length)LOG_CHANNELS=s.logChannels; if(Array.isArray(s.logRemarks)&&s.logRemarks.length)LOG_REMARKS=s.logRemarks; }
-function currentSettings(){ return {products:PRODUCTS,locations:LOCATIONS,sources:SOURCES,schedule:SCHEDULE,owner:OWNER,wonInterval:REORDER_DAYS,lostInterval:REENGAGE_DAYS,qvat:QVAT,qterms:QUOTE_TERMS,qbank:QUOTE_BANK,qvatno:QUOTE_VATNO,qfrom:QUOTE_FROM,coldSchedule:COLD_SCHEDULE,coldTargets:COLD_TARGETS,coldRegions:COLD_REGIONS,coldGap:COLD_GAP,auth:AUTH,coaSignatory:COA_SIGNATORY,coaTitle:COA_TITLE,coaStmt:COA_STMT,poTerms:PO_TERMS,poVat:PO_VAT,poDelivery:PO_DELIVERY,logChannels:LOG_CHANNELS,logRemarks:LOG_REMARKS}; }
+function applySettings(s){ if(!s)return; if(Array.isArray(s.products)&&s.products.length)PRODUCTS=s.products; if(Array.isArray(s.locations)&&s.locations.length)LOCATIONS=s.locations; if(Array.isArray(s.sources)&&s.sources.length)SOURCES=s.sources; if(Array.isArray(s.schedule)&&s.schedule.length)SCHEDULE=s.schedule; if(s.owner){OWNER=s.owner;} if(s.wonInterval>0)REORDER_DAYS=s.wonInterval; if(s.lostInterval>0)REENGAGE_DAYS=s.lostInterval; if(s.qvat>=0)QVAT=s.qvat; if(Array.isArray(s.qterms)&&s.qterms.length)QUOTE_TERMS=s.qterms; if(Array.isArray(s.qpresets))QUOTE_PRESETS=s.qpresets; if(s.qbank)QUOTE_BANK=s.qbank; if(s.qvatno)QUOTE_VATNO=s.qvatno; if(s.qfrom)QUOTE_FROM=Object.assign({},QUOTE_FROM,s.qfrom); if(Array.isArray(s.coldSchedule)&&s.coldSchedule.length)COLD_SCHEDULE=s.coldSchedule; if(s.coldTargets)COLD_TARGETS=Object.assign({},COLD_TARGETS,s.coldTargets); if(Array.isArray(s.coldRegions)&&s.coldRegions.length)COLD_REGIONS=s.coldRegions; if(s.coldGap>0)COLD_GAP=s.coldGap; if(s.auth){ if(s.auth.adminPass)AUTH.adminPass=s.auth.adminPass; if(s.auth.mgrPass)AUTH.mgrPass=s.auth.mgrPass; if(s.auth.teamPass)AUTH.teamPass=s.auth.teamPass; if(typeof s.auth.timeout==='number'){AUTH.timeout=s.auth.timeout;try{localStorage.setItem('ksaTimeout',String(s.auth.timeout));}catch(e){}} if(s.auth.perms){ if(s.auth.perms.mgr)AUTH.perms.mgr=Object.assign({},AUTH.perms.mgr,s.auth.perms.mgr); if(s.auth.perms.team)AUTH.perms.team=Object.assign({},AUTH.perms.team,s.auth.perms.team); } } if(s.coaSignatory)COA_SIGNATORY=s.coaSignatory; if(s.coaTitle)COA_TITLE=s.coaTitle; if(s.coaStmt)COA_STMT=s.coaStmt; if(Array.isArray(s.poTerms)&&s.poTerms.length)PO_TERMS=s.poTerms; if(s.poVat>=0)PO_VAT=s.poVat; if(s.poDelivery!=null)PO_DELIVERY=s.poDelivery; if(Array.isArray(s.logChannels)&&s.logChannels.length)LOG_CHANNELS=s.logChannels; if(Array.isArray(s.logRemarks)&&s.logRemarks.length)LOG_REMARKS=s.logRemarks; }
+function currentSettings(){ return {products:PRODUCTS,locations:LOCATIONS,sources:SOURCES,schedule:SCHEDULE,owner:OWNER,wonInterval:REORDER_DAYS,lostInterval:REENGAGE_DAYS,qvat:QVAT,qterms:QUOTE_TERMS,qpresets:QUOTE_PRESETS,qbank:QUOTE_BANK,qvatno:QUOTE_VATNO,qfrom:QUOTE_FROM,coldSchedule:COLD_SCHEDULE,coldTargets:COLD_TARGETS,coldRegions:COLD_REGIONS,coldGap:COLD_GAP,auth:AUTH,coaSignatory:COA_SIGNATORY,coaTitle:COA_TITLE,coaStmt:COA_STMT,poTerms:PO_TERMS,poVat:PO_VAT,poDelivery:PO_DELIVERY,logChannels:LOG_CHANNELS,logRemarks:LOG_REMARKS}; }
 function reorderNext(c){ if(!c.reorder||!c.reorder.from)return null; return addDays(c.reorder.last||c.reorder.from,REORDER_DAYS); }
 function reengageNext(c){ if(!c.reengage||!c.reengage.from)return null; return addDays(c.reengage.last||c.reengage.from,REENGAGE_DAYS); }
 var LOCATIONS=['Dammam','Khobar','Jubail','Riyadh','Jeddah','Yanbu','Qatar','Bahrain','Kuwait'];
@@ -418,7 +423,8 @@ function esc(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'
 /* KSA weekend = Friday. Fridays are NOT counted as days: the schedule counts working days only (Sat–Thu). */
 function shiftWorkday(s){var d=pd(s);if(d.getDay()===5)d.setDate(d.getDate()+1);return iso(d);}
 function addWorkdays(s,n){var d=pd(s);var added=0;while(added<n){d.setDate(d.getDate()+1);if(d.getDay()!==5)added++;}return iso(d);}
-function dueDate(c,step){var r=c.followups&&c.followups[step.k];if(r&&r.date)return r.date;return addWorkdays(c.inquiryDate,step.o);}
+function followBase(c){return c.quoteDate||c.inquiryDate;}
+function dueDate(c,step){var r=c.followups&&c.followups[step.k];if(r&&r.date)return r.date;return addWorkdays(followBase(c),step.o);}
 
 /* ---------- backend bridge: Firebase (Realtime Database) ---------- */
 var LIVE=false;
@@ -552,7 +558,7 @@ function seed(){var t=today();return[
 /* ============================================================ RENDER ============================================================ */
 function updateHeader(){
   var sw=document.getElementById('areaswitch');
-  var areas=[['crm','CRM']]; if(can('quotations'))areas.push(['quotes','Quotations']); if(can('coa'))areas.push(['coa','COA']); if(can('po'))areas.push(['po','Purchase Orders']); if(can('sales'))areas.push(['sales','Sales Forecast']); if(can('cold'))areas.push(['cold','Cold Marketing']);
+  var areas=[['crm','CRM']]; if(can('quotations'))areas.push(['quotes','Quotations']); if(can('coa'))areas.push(['coa','COA']); if(can('po'))areas.push(['po','Purchase Orders']); if(can('sales'))areas.push(['sales','Sales Forecast']);
   if(sw)sw.innerHTML='<button data-home class="areabtn'+(state.area==='home'?' on':'')+'" title="Menu" style="padding:8px 10px;">'+ic('grid',15)+'</button>'+areas.map(function(a){return '<button data-area="'+a[0]+'" class="areabtn'+(state.area===a[0]?' on':'')+'">'+a[1]+'</button>';}).join('');
   var lo=document.getElementById('btnLogout'); if(lo){ if(state.role){lo.style.display='';lo.innerHTML=ic('users',14)+' '+roleLabel(state.role)+' · Log out';} else lo.style.display='none'; }
   var add=document.getElementById('btnAdd'),exp=document.getElementById('btnExport');
@@ -586,7 +592,7 @@ function render(){
     return;
   }
   if(state.area==='cold'){
-    _renderCold(v);return;
+    state.area='crm';
   }
   if(state.area==='coa'){
     _renderCoa(v);return;
@@ -637,7 +643,6 @@ function viewHome(){
   if(can('coa'))tiles.push({go:'coa',ic:'award',label:'COA',desc:(state.coas||[]).length+' certificates',g1:'#34D399',g2:'#0F9D58'});
   if(can('po'))tiles.push({go:'po',ic:'cart',label:'Purchase Orders',desc:(state.pos||[]).length+' POs',g1:'#A78BFA',g2:'#7C3AED'});
   if(can('sales'))tiles.push({go:'sales',ic:'trend',label:'Sales Forecast',desc:'This month '+money(salesMonth),g1:'#2DD4BF',g2:'#0D9488'});
-  if(can('cold'))tiles.push({go:'cold',ic:'phone',label:'Cold Marketing',desc:(state.prospects||[]).length+' prospects',g1:'#F472B6',g2:'#BE185D'});
   if(state.role==='admin')tiles.push({go:'settings',ic:'gear',label:'Settings',desc:'Users, password & access',g1:'#94A3B8',g2:'#52607A'});
   var cards=tiles.map(function(t){return '<button class="hometile" data-go="'+t.go+'" style="all:unset;cursor:pointer;box-sizing:border-box;display:flex;flex-direction:column;gap:15px;width:214px;padding:22px;border-radius:20px;background:#fff;border:1px solid var(--lineSoft);box-shadow:0 4px 16px rgba(20,25,40,.06);">'
     +'<span style="width:54px;height:54px;border-radius:15px;background:linear-gradient(135deg,'+t.g1+','+t.g2+');color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px '+t.g2+'55;">'+ic(t.ic,25)+'</span>'
@@ -900,7 +905,7 @@ function viewDashboard(){
   var a='<div class="card" style="margin-bottom:20px;overflow:hidden;border-color:'+(overdue?'var(--overdue)':'var(--line)')+';">';
   a+='<div style="padding:14px 16px;border-bottom:1px solid var(--lineSoft);display:flex;align-items:center;gap:9px;"><span style="color:'+(overdue?'var(--overdue)':'var(--accent)')+';display:flex;" class="'+(overdue?'pulse':'')+'">'+ic('bell',16)+'</span><span style="font-weight:700;font-size:14px;">Needs your attention</span>'+(att.length?'<span class="chip" style="background:var(--overdueBg);color:var(--overdue);">'+att.length+' to action</span>':'')+'<span style="margin-left:auto;font-size:11.5px;color:var(--muted);">all outstanding · Fridays not counted</span></div>';
   if(!att.length)a+='<div style="padding:24px 16px;color:var(--muted);font-size:13.5px;">All caught up — no follow-ups due or missed.</div>';
-  else a+=att.map(function(r,i){var m=M[r.st];var lbl=r.kind==='reorder'?'New-order reminder':r.kind==='reengage'?'Re-engagement (lost client)':r.resume?'Resume follow-up':(r.step.f+' follow-up');var actBtn=r.kind==='reorder'?'<button class="btn btn-ghost btn-sm" data-act="reorder" data-id="'+r.c.id+'">Log ask</button>':r.kind==='reengage'?'<button class="btn btn-ghost btn-sm" data-act="reengage" data-id="'+r.c.id+'">Log ask</button>':'<button class="btn btn-ghost btn-sm" data-act="log" data-id="'+r.c.id+'">Log</button>';var _q=clientQuote(r.c.id);var qBtn=(_q&&(can('quotesList')||can('quotations')||can('quotesPdf')))?'<button class="icon-btn qlink hide-sm" data-qview="'+_q.id+'" title="View quotation">'+ic('report',15)+'</button>':'';return '<div class="row" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:'+(i?'1px solid var(--lineSoft)':'none')+';border-left:3px solid '+m.c+';"><span class="chip" style="background:'+m.bg+';color:'+m.c+';min-width:74px;text-align:center;">'+m.l+'</span><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(r.c.company)+(r.c.location?' <span style="color:var(--muted);font-weight:500;">· '+esc(r.c.location)+'</span>':'')+'</div><div style="font-size:12px;color:var(--muted);">'+lbl+' · '+humanDay(r.date)+(r.st==='overdue'?' · '+Math.abs(between(today(),r.date))+'d late':'')+'</div></div>'+qBtn+'<a class="icon-btn qlink hide-sm" href="tel:'+esc(r.c.phone)+'">'+ic('phone',15)+'</a><a class="icon-btn qlink hide-sm" href="mailto:'+esc(r.c.email)+'">'+ic('mail',15)+'</a>'+actBtn+'</div>';}).join('');
+  else a+=att.map(function(r,i){var m=M[r.st];var lbl=r.kind==='reorder'?'New-order reminder':r.kind==='reengage'?'Re-engagement (lost client)':r.resume?'Resume follow-up':(r.step.f+' follow-up');var actBtn=r.kind==='reorder'?'<button class="btn btn-ghost btn-sm" data-act="reorder" data-id="'+r.c.id+'">Log ask</button>':r.kind==='reengage'?'<button class="btn btn-ghost btn-sm" data-act="reengage" data-id="'+r.c.id+'">Log ask</button>':'<button class="btn btn-ghost btn-sm" data-act="log" data-id="'+r.c.id+'">Log</button>';var _q=clientQuote(r.c.id);var qBtn=(_q&&(can('quotesList')||can('quotations')||can('quotesPdf')))?'<button class="icon-btn qlink hide-sm" data-qview="'+_q.id+'" title="View quotation">'+ic('report',15)+'</button>':'';return '<div class="row" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border-top:'+(i?'1px solid var(--lineSoft)':'none')+';border-left:3px solid '+m.c+';"><span class="chip" style="background:'+m.bg+';color:'+m.c+';min-width:74px;text-align:center;">'+m.l+'</span><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+esc(r.c.company)+inqTag(r.c)+(r.c.location?' <span style="color:var(--muted);font-weight:500;">· '+esc(r.c.location)+'</span>':'')+'</div><div style="font-size:12px;color:var(--muted);">'+lbl+' · '+humanDay(r.date)+(r.st==='overdue'?' · '+Math.abs(between(today(),r.date))+'d late':'')+'</div></div>'+qBtn+'<a class="icon-btn qlink hide-sm" href="tel:'+esc(r.c.phone)+'">'+ic('phone',15)+'</a><a class="icon-btn qlink hide-sm" href="mailto:'+esc(r.c.email)+'">'+ic('mail',15)+'</a>'+actBtn+'</div>';}).join('');
   a+='</div>';
 
   function breakdown(title,counts){var keys=Object.keys(counts);var tot=keys.reduce(function(s,k){return s+counts[k];},0);var max=Math.max(1,Math.max.apply(null,keys.map(function(k){return counts[k];})));var rows=keys.filter(function(k){return counts[k]>0;}).sort(function(x,y){return counts[y]-counts[x];}).map(function(k,idx){var p=tot?Math.round(counts[k]/tot*100):0;var c=colr(idx);return '<div style="display:grid;grid-template-columns:1fr 92px;align-items:center;gap:10px;margin-bottom:13px;"><div style="min-width:0;"><div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span style="width:9px;height:9px;border-radius:3px;background:'+c+';flex-shrink:0;"></span>'+esc(k)+'</div><div style="height:7px;background:var(--lineSoft);border-radius:6px;overflow:hidden;"><i style="display:block;height:100%;width:'+Math.round(counts[k]/max*100)+'%;background:'+c+';border-radius:6px;"></i></div></div><div style="text-align:right;white-space:nowrap;">'+valTag(counts[k],p)+'</div></div>';}).join('')||'<div style="color:var(--muted);font-size:13px;">No inquiries in this period.</div>';return '<div class="card" style="padding:18px 18px 8px;flex:1;min-width:260px;"><div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;"><span style="width:5px;height:15px;border-radius:3px;background:var(--accent);display:inline-block;"></span>'+title+'</div>'+rows+'</div>';}
@@ -944,6 +949,10 @@ function statusMatch(c,st){
 }
 
 function dt(dstr,tstr){ if(!dstr)return '—'; return human(dstr)+(tstr?' · '+tstr:''); }
+function companyInquiries(company){return (state.clients||[]).filter(function(c){return (c.company||'').trim().toLowerCase()===(company||'').trim().toLowerCase();}).sort(function(a,b){var x=(a.inquiryDate||'')+(a.inquiryTime||'')+(a.id||'');var y=(b.inquiryDate||'')+(b.inquiryTime||'')+(b.id||'');return x<y?-1:x>y?1:0;});}
+function inqNo(c){var list=companyInquiries(c&&c.company);for(var i=0;i<list.length;i++){if(list[i].id===c.id)return i+1;}return 1;}
+function inqTag(c){if(!c)return '';var list=companyInquiries(c.company);if(list.length<=1)return '';return ' <span style="font-weight:600;color:var(--accentDk);font-size:.9em;">· Inq #'+inqNo(c)+'</span>';}
+function inqTagPlain(c){if(!c)return '';var list=companyInquiries(c.company);if(list.length<=1)return '';return ' · Inq #'+inqNo(c);}
 function companyGroups(){
   var g={};(state.clients||[]).forEach(function(c){var k=(c.company||'').trim().toLowerCase();if(!k)return;if(!g[k])g[k]={company:c.company,items:[]};g[k].items.push(c);});
   return g;
@@ -1020,7 +1029,7 @@ function viewInquiries(){
   var pgi=pager('inq',list.length);var pageList=list.slice(pgi.start,pgi.end);
   var rows=pageList.map(function(c){var SI=SRCICO[c.source]||'msg';
     var respLine=c.responded==='Yes'?'<div style="font-size:10.5px;color:var(--done);margin-top:3px;">Responded '+dt(c.responseDate,c.responseTime)+'</div>':'<div style="font-size:10.5px;color:var(--accentDk);margin-top:3px;">Not responded</div>';
-    return '<tr class="row'+(c.status==='Won'?' wonrow':'')+'" style="border-top:1px solid var(--lineSoft);"><td style="padding:11px 12px;"><div style="font-weight:600;font-size:12.5px;color:var(--accentDk);cursor:pointer;white-space:nowrap;" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+(c.status==='Won'?' <span style="color:var(--done);">'+ic('trophy',12)+'</span>':'')+'</div><div style="font-size:11px;color:var(--muted);">'+esc(c.contact)+'</div></td>'
+    return '<tr class="row'+(c.status==='Won'?' wonrow':'')+'" style="border-top:1px solid var(--lineSoft);"><td style="padding:11px 12px;"><div style="font-weight:600;font-size:12.5px;color:var(--accentDk);cursor:pointer;white-space:nowrap;" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+inqTag(c)+(c.status==='Won'?' <span style="color:var(--done);">'+ic('trophy',12)+'</span>':'')+'</div><div style="font-size:11px;color:var(--muted);">'+esc(c.contact)+'</div></td>'
       +'<td style="padding:11px 12px;"><span style="display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--ink2);white-space:nowrap;"><span style="color:var(--accent);display:flex;">'+ic(SI,13)+'</span>'+esc(c.source||'—')+'</span></td>'
       +'<td style="padding:11px 12px;font-size:11.5px;color:var(--ink2);white-space:nowrap;">'+(c.location?'<span style="display:inline-flex;align-items:center;gap:4px;"><span style="color:var(--muted);display:flex;">'+ic('pin',12)+'</span>'+esc(c.location)+'</span>':'—')+'</td>'
       +'<td style="padding:11px 12px;max-width:160px;">'+productTags(c)+'</td>'
@@ -1039,7 +1048,7 @@ function fclientCard(c){
   SCHEDULE.forEach(function(s){if(na)return;var st=fu(c,s);if(st==='overdue'||st==='due'||st==='upcoming')na={s:s,st:st};});
   if(na){var m=M[na.st];next='<span class="chip" style="background:'+m.bg+';color:'+m.c+';">Next: '+na.s.f+' · '+humanDay(dueDate(c,na.s))+'</span>';}
   return '<div class="card" style="padding:15px 16px;margin-bottom:12px;border-left:3px solid '+(SCHEDULE.some(function(s){return fu(c,s)==='overdue';})?'var(--overdue)':'transparent')+';">'
-    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;"><div><div style="font-weight:700;font-size:14px;cursor:pointer;color:var(--accentDk);" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+'</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">'+esc(c.contact)+' · '+esc(c.phone)+(c.location?' · '+esc(c.location):'')+' · inquiry '+human(c.inquiryDate)+'</div><div style="margin-top:7px;">'+productTags(c)+'</div></div><div style="display:flex;gap:8px;align-items:center;">'+next+'<button class="btn btn-primary btn-sm" data-act="log" data-id="'+c.id+'">Log follow-up</button></div></div>'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px;"><div><div style="font-weight:700;font-size:14px;cursor:pointer;color:var(--accentDk);" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+inqTag(c)+'</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">'+esc(c.contact)+' · '+esc(c.phone)+(c.location?' · '+esc(c.location):'')+' · inquiry '+human(c.inquiryDate)+'</div><div style="margin-top:7px;">'+productTags(c)+'</div></div><div style="display:flex;gap:8px;align-items:center;">'+next+'<button class="btn btn-primary btn-sm" data-act="log" data-id="'+c.id+'">Log follow-up</button></div></div>'
     +railHTML(c)+'</div>';
 }
 function viewFollowups(){
@@ -1066,9 +1075,9 @@ function viewFollowups(){
     h+=pgf.ctrl;
     h+=active.length?pageActive.map(fclientCard).join(''):'<div class="card" style="padding:24px;color:var(--muted);font-size:13.5px;">Nothing here. Follow-ups start automatically once a quotation is marked as submitted.</div>';
   } else if(ft==='awaiting'){
-    h+=awaiting.length?awaiting.map(function(c){return '<div class="card row" style="padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:13.5px;cursor:pointer;color:var(--accentDk);white-space:nowrap;" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+'</div><div style="font-size:12px;color:var(--muted);">'+esc(c.contact)+(c.location?' · '+esc(c.location):'')+' · inquiry '+human(c.inquiryDate)+(c.notSubmittedReason?' · '+esc(c.notSubmittedReason.split("\\n")[0]):'')+'</div></div><span class="chip" style="background:var(--dueBg);color:var(--accentDk);">Not submitted</span><button class="btn btn-ghost btn-sm" data-act="log" data-id="'+c.id+'">Log reason</button><button class="btn btn-ghost btn-sm" data-act="lost" data-id="'+c.id+'" style="color:var(--overdue);border-color:var(--overdue);">Can\'t provide</button><button class="btn btn-primary btn-sm" data-act="share" data-id="'+c.id+'">Mark submitted</button></div>';}).join(''):'<div class="card" style="padding:24px;color:var(--muted);font-size:13.5px;">No inquiries awaiting a quotation.</div>';
+    h+=awaiting.length?awaiting.map(function(c){return '<div class="card row" style="padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;"><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:13.5px;cursor:pointer;color:var(--accentDk);white-space:nowrap;" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+inqTag(c)+'</div><div style="font-size:12px;color:var(--muted);">'+esc(c.contact)+(c.location?' · '+esc(c.location):'')+' · inquiry '+human(c.inquiryDate)+(c.notSubmittedReason?' · '+esc(c.notSubmittedReason.split("\\n")[0]):'')+'</div></div><span class="chip" style="background:var(--dueBg);color:var(--accentDk);">Not submitted</span><button class="btn btn-ghost btn-sm" data-act="log" data-id="'+c.id+'">Log reason</button><button class="btn btn-ghost btn-sm" data-act="lost" data-id="'+c.id+'" style="color:var(--overdue);border-color:var(--overdue);">Can\'t provide</button><button class="btn btn-primary btn-sm" data-act="share" data-id="'+c.id+'">Mark submitted</button></div>';}).join(''):'<div class="card" style="padding:24px;color:var(--muted);font-size:13.5px;">No inquiries awaiting a quotation.</div>';
   } else {
-    h+=closed.length?'<div class="card" style="overflow:hidden;">'+closed.map(function(c,i){return '<div class="row" style="padding:13px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:'+(i?'1px solid var(--lineSoft)':'none')+';"><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:13.5px;cursor:pointer;color:var(--accentDk);white-space:nowrap;" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+'</div><div style="font-size:12px;color:var(--muted);">inquiry '+human(c.inquiryDate)+'</div></div><span class="stwrap">'+statusChip(c)+'</span><button class="btn btn-ghost btn-sm" data-act="log" data-id="'+c.id+'">Open</button></div>';}).join('')+'</div>':'<div class="card" style="padding:24px;color:var(--muted);font-size:13.5px;">Nothing closed or stopped yet.</div>';
+    h+=closed.length?'<div class="card" style="overflow:hidden;">'+closed.map(function(c,i){return '<div class="row" style="padding:13px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-top:'+(i?'1px solid var(--lineSoft)':'none')+';"><div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:13.5px;cursor:pointer;color:var(--accentDk);white-space:nowrap;" data-act="detail" data-id="'+c.id+'">'+esc(c.company)+inqTag(c)+'</div><div style="font-size:12px;color:var(--muted);">inquiry '+human(c.inquiryDate)+'</div></div><span class="stwrap">'+statusChip(c)+'</span><button class="btn btn-ghost btn-sm" data-act="log" data-id="'+c.id+'">Open</button></div>';}).join('')+'</div>':'<div class="card" style="padding:24px;color:var(--muted);font-size:13.5px;">Nothing closed or stopped yet.</div>';
   }
   return h;
 }
@@ -1085,8 +1094,9 @@ function analytics(list){
   var done=0,missed=0,due=0,upc=0;
   list.forEach(function(c){SCHEDULE.forEach(function(s){var st=fu(c,s);if(st==='done')done++;else if(st==='overdue')missed++;else if(st==='due')due++;else if(st==='upcoming')upc++;});});
   var winrate=won+lost>0?Math.round(won/(won+lost)*100):0;
+  var fuChannel={};list.forEach(function(c){if(c.followups)Object.keys(c.followups).forEach(function(k){var r=c.followups[k];if(r&&r.done&&r.channel){fuChannel[r.channel]=(fuChannel[r.channel]||0)+1;}});});
   return {total:total,shared:shared,awaiting:awaiting,won:won,lost:lost,stopped:stopped,activeF:activeF,done:done,missed:missed,due:due,upc:upc,winrate:winrate,
-    product:countBy(list,'product'),location:countBy(list,'location'),source:countBy(list,'source')};
+    product:countBy(list,'product'),location:countBy(list,'location'),source:countBy(list,'source'),fuChannel:fuChannel};
 }
 function pct(n,t){return t?Math.round(n/t*100):0;}
 function valTag(n,p){return '<span class="valnum">'+n+'</span><span class="pctpill">'+p+'%</span>';}
@@ -1113,7 +1123,8 @@ function viewAnalysis(){
     +tile('Stopped',A.stopped,'var(--ink2)')
     +tile('Win rate',A.winrate+'%','var(--purple)')+'</div>';
   var charts='<div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;">'+barBlock('By product',A.product)+barBlock('By location',A.location)+'</div>'
-    +'<div style="display:flex;gap:14px;flex-wrap:wrap;">'+barBlock('By inquiry channel',A.source)+barBlock('Follow-up performance',{Taken:A.done,Missed:A.missed,'Due today':A.due,Upcoming:A.upc})+'</div>';
+    +'<div style="display:flex;gap:14px;flex-wrap:wrap;">'+barBlock('By inquiry channel',A.source)+barBlock('Follow-up performance',{Taken:A.done,Missed:A.missed,'Due today':A.due,Upcoming:A.upc})+'</div>'
+    +'<div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;">'+barBlock('Follow-ups by channel (how you followed up)',A.fuChannel)+'</div>';
   var head='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin:2px 0 18px;"><div><div style="font-weight:700;font-size:18px;letter-spacing:-.3px;">Sales &amp; Follow-up Analysis</div><div style="font-size:12.5px;color:var(--muted);margin-top:2px;">Period: '+rangeLabel()+' · prepared by '+esc(OWNER)+'</div></div><button class="btn btn-primary" id="btnPDF">'+ic('download',15)+' Download PDF report</button></div>';
   return filterBar()+rhead+head+tiles+charts;
 }
@@ -1141,8 +1152,7 @@ function viewSettings(){
     ['Quotations',[['quotations','Open Quotations'],['quotesList','View list'],['quotesEdit','Create / edit'],['quotesPdf','Download PDF'],['quoteReport','View report']]],
     ['Certificates (COA)',[['coa','Open COA'],['coaEdit','Create / edit'],['coaPdf','Download PDF']]],
     ['Purchase Orders',[['po','Open POs'],['poEdit','Create / edit'],['poPdf','Download PDF']]],
-    ['Sales Forecast',[['sales','Open Sales Forecast'],['salesEdit','Add / edit forecasts & targets']]],
-    ['Cold Marketing',[['cold','Open Cold Marketing'],['coldActivity','View Activity'],['coldReport','View Report']]]];
+    ['Sales Forecast',[['sales','Open Sales Forecast'],['salesEdit','Add / edit forecasts & targets']]]];
   function roleCol(role,pm){var html='';GROUPS.forEach(function(g){html+='<div style="margin-top:12px;"><div style="font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">'+g[0]+'</div>';g[1].forEach(function(row){html+='<label style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink2);padding:5px 0;"><input type="checkbox" id="perm_'+role+'_'+row[0]+'" '+(pm[row[0]]?'checked':'')+' style="width:15px;height:15px;flex-shrink:0;"/> '+row[1]+'</label>';});html+='</div>';});return html;}
   var access='<div class="setcard"><h3><span class="sq"></span>User access &amp; login</h3><div class="desc">Three passwords, three roles. <b>Admin</b> always has full access (including this panel). Set what <b>Management</b> and <b>Team</b> can do. Changes apply next time they sign in.</div>'
     +'<div class="addrow" style="margin-bottom:6px;flex-wrap:wrap;"><div style="flex:1;min-width:150px;"><label class="field-label">Admin password</label><input id="auth_admin" value="'+esc(AUTH.adminPass)+'"/></div><div style="flex:1;min-width:150px;"><label class="field-label">Management password</label><input id="auth_mgr" value="'+esc(AUTH.mgrPass)+'"/></div><div style="flex:1;min-width:150px;"><label class="field-label">Team password</label><input id="auth_team" value="'+esc(AUTH.teamPass)+'"/></div><div style="width:150px;"><label class="field-label">Auto-lock (minutes)</label><input type="number" min="0" id="auth_timeout" value="'+(AUTH.timeout||10)+'"/></div></div>'
@@ -1277,6 +1287,7 @@ function readQuoteForm(){
   var vr=document.getElementById('q_vatrate');if(vr)q.vatRate=vr.value;
   var terms=[];Array.prototype.forEach.call(document.querySelectorAll('[data-qterm]'),function(cb){if(cb.checked)terms.push(cb.getAttribute('data-qterm-text'));});
   if(document.querySelector('[data-qterm]'))q.terms=terms;
+  var ps={};Array.prototype.forEach.call(document.querySelectorAll('[data-qpreset]'),function(sel){var g=sel.getAttribute('data-qpreset');ps[g]=sel.value;});if(document.querySelector('[data-qpreset]'))q.presetSel=ps;
 }
 function qToggle(which){readQuoteForm();var q=state.editingQuote;if(which==='disc')q.discountOn=!q.discountOn;if(which==='vat')q.vatOn=!q.vatOn;renderQuote();}
 function qAddRow(){readQuoteForm();state.editingQuote.items.push({product:'',spec:'',qty:1,unit:'Pc',price:0});renderQuote();}
@@ -1332,6 +1343,8 @@ function renderQuote(){
     +'<div class="formsec"><span class="sq"></span>Terms &amp; conditions <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;">— tick the ones that apply</span></div>'
     +'<div>'+terms+'</div>'
     +'<div class="addrow" style="margin-top:8px;"><input id="q_newterm" placeholder="Add another term…"/><button class="btn btn-ghost" data-qaddterm="1">Add</button></div>'
+    +(QUOTE_PRESETS&&QUOTE_PRESETS.length?('<div class="formsec"><span class="sq"></span>Quick terms <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;">— pick one per group; it is added to the terms on the quotation</span></div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">'+QUOTE_PRESETS.map(function(g){var sel=(q.presetSel&&q.presetSel[g.label])||'';return '<div><label class="field-label">'+esc(g.label)+'</label><select class="fancy" data-qpreset="'+esc(g.label)+'"><option value="">— none —</option>'+(g.options||[]).map(function(o){return '<option'+(sel===o?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select></div>';}).join('')+'</div>'):'')
     +'<div class="formsec"><span class="sq"></span>Notes (optional)</div>'
     +'<textarea id="q_notes" rows="2" placeholder="Internal note (not printed)">'+esc(q.notes||'')+'</textarea>'
     +'</div>'
@@ -1353,7 +1366,7 @@ function saveQuote(mode){
   if(!q.client.company||!q.client.company.trim()){alert('Please enter the client company.');return;}
   var existing=state.quotes.find(function(x){return x.id===q.id;});
   q.updatedTs=Date.now();q.by=state.me||OWNER;
-  if(existing){q.rev=(existing.rev||0)+1;state.quotes=state.quotes.map(function(x){return x.id===q.id?q:x;});pushActivity('Revised quotation',q.client.company,q.number+' Rev '+q.rev,q.clientId||null,null);}
+  if(existing){q.rev=(existing.rev||0)+1;if(q.date===existing.date){q.date=today();q.validUntil=addDays(today(),30);}state.quotes=state.quotes.map(function(x){return x.id===q.id?q:x;});pushActivity('Revised quotation',q.client.company,q.number+' Rev '+q.rev,q.clientId||null,null);}
   else{state.quotes=state.quotes.concat([q]);pushActivity(q.rev?'Revised quotation':'Created quotation',q.client.company,q.number+(q.rev?' Rev '+q.rev:''),q.clientId||null,null);}
   if(q.clientId){var c=state.clients.find(function(x){return x.id===q.clientId;});if(c&&c.quoteShared!=='Yes'){if(confirm('Mark this client\u2019s inquiry as "Quotation submitted"?')){c.quoteShared='Yes';c.quoteValue=money(qGrand(q));state.clients=state.clients.map(function(x){return x.id===c.id?c:x;});pushActivity('Quotation submitted',c.company,'',c.id,null);}}}
   state.editingQuote=null;closeModal();apiSaveAll();
@@ -1389,10 +1402,13 @@ function viewQuotes(){
     +'<td style="padding:12px 14px;text-align:right;white-space:nowrap;"><button class="icon-btn" data-qview="'+q.id+'" title="View quotation">'+ic('search',15)+'</button><button class="icon-btn" data-qpdf="'+q.id+'" title="Download PDF">'+ic('download',15)+'</button><button class="icon-btn" data-qedit="'+q.id+'" title="Edit">'+ic('edit',15)+'</button><button class="icon-btn" data-qrev="'+q.id+'" title="Create revision">'+ic('refresh',15)+'</button><button class="icon-btn" data-qdel="'+q.id+'" title="Delete">'+ic('trash',15)+'</button></td></tr>';}).join('');
   return head+bar+'<div class="tablewrap card" style="overflow:hidden;"><table><thead><tr style="background:#F8F9FB;"><th style="padding-left:12px;">Quote no.</th><th>Client</th><th>Date</th><th>Items</th><th>Grand total</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
 }
+function readPresetsFromDOM(){var out=[];Array.prototype.forEach.call(document.querySelectorAll('[data-qpglabel]'),function(lab){var gi=+lab.getAttribute('data-qpglabel');var ta=document.querySelector('[data-qpopts="'+gi+'"]');var options=ta?ta.value.split('\n').map(function(s){return s.trim();}).filter(Boolean):[];out.push({label:(lab.value||'').trim()||('Group '+(out.length+1)),options:options});});return out;}
 function viewQuoteSettings(){
-  var terms='<div class="chiplist" style="flex-direction:column;align-items:stretch;gap:6px;">'+QUOTE_TERMS.map(function(t,i){return '<div style="display:flex;gap:8px;align-items:center;"><input data-qtermedit="'+i+'" value="'+esc(t)+'" style="flex:1;font-size:12.5px;"/><button class="icon-btn" data-qtermrm="'+i+'">'+ic('trash',14)+'</button></div>';}).join('')+'</div>';
+  var terms='';
   var t1='<div class="setcard"><h3><span class="sq"></span>Default VAT</h3><div class="desc">Applied when VAT is enabled on a quotation.</div><div class="addrow" style="max-width:220px;"><input type="number" min="0" step="0.1" id="qset_vat" value="'+QVAT+'"/><span style="align-self:center;color:var(--muted);">%</span></div></div>';
-  var t2='<div class="setcard"><h3><span class="sq"></span>Default terms &amp; conditions</h3><div class="desc">These appear pre-ticked on every new quotation; you can toggle or edit per quote.</div>'+terms+'<div class="addrow" style="margin-top:10px;"><input id="qset_newterm" placeholder="Add a default term…"/><button class="btn btn-ghost" data-qsetaddterm="1">Add</button></div></div>';
+  var t2='<div class="setcard"><h3><span class="sq"></span>Default terms &amp; conditions</h3><div class="desc">These appear pre-ticked on every new quotation (you can still toggle them per quote). Edit freely — one term per line — then press Save.</div>'
+    +'<textarea id="qset_terms" rows="6">'+esc(QUOTE_TERMS.join('\n'))+'</textarea>'
+    +'<div style="margin-top:10px;"><button class="btn btn-primary" data-qtermssave="1">'+ic('check',15)+' Save terms</button></div></div>';
   var t3='<div class="setcard"><h3><span class="sq"></span>Bank &amp; VAT details</h3><div class="desc">Shown in the quotation footer.</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">'
     +'<div><label class="field-label">Bank</label><input id="qset_bank" value="'+esc(QUOTE_BANK.bank)+'"/></div>'
     +'<div><label class="field-label">Account name</label><input id="qset_acc" value="'+esc(QUOTE_BANK.account)+'"/></div>'
@@ -1410,7 +1426,14 @@ function viewQuoteSettings(){
     +'<div><label class="field-label">Website</label><input id="qset_fweb" value="'+esc(QUOTE_FROM.web)+'"/></div>'
     +'</div></div>';
   var head='<div style="font-weight:700;font-size:18px;letter-spacing:-.3px;margin:2px 0 4px;">Quote settings</div><div style="font-size:12.5px;color:var(--muted);margin-bottom:18px;">Defaults used on every new quotation. Changes save automatically.</div>';
-  return head+t4+t1+t2+t3;
+  var tp='<div class="setcard"><h3><span class="sq"></span>Selectable quote terms (quick terms)</h3><div class="desc">Groups like <b>Transportation</b>, <b>Payment terms</b>, <b>Delivery time</b>, each with ready options (one option per line). When making a quotation you pick one per group and it is added to the Terms &amp; Conditions automatically. Edit here, then press Save.</div>'
+    +QUOTE_PRESETS.map(function(g,gi){return '<div style="border:1px solid var(--lineSoft);border-radius:11px;padding:12px 14px;margin-bottom:10px;background:#FBFCFD;">'
+      +'<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><input data-qpglabel="'+gi+'" value="'+esc(g.label)+'" placeholder="Group name" style="font-weight:700;flex:1;"/><button class="icon-btn" data-qpgdel="'+gi+'" title="Remove group">'+ic('trash',15)+'</button></div>'
+      +'<textarea data-qpopts="'+gi+'" rows="'+Math.max(2,(g.options||[]).length)+'" placeholder="One option per line…">'+esc((g.options||[]).join('\n'))+'</textarea>'
+      +'</div>';}).join('')
+    +'<div class="addrow" style="margin-top:6px;"><input id="qpg_new" placeholder="New group name (e.g. Payment terms, Warranty)"/><button class="btn btn-ghost" data-qpgadd="1">'+ic('plus',14)+' Add group</button></div>'
+    +'<div style="margin-top:12px;"><button class="btn btn-primary" data-qpresetsave="1">'+ic('check',15)+' Save quick terms</button></div></div>';
+  return head+t4+t1+t2+tp+t3;
 }
 
 function qReportQuotes(){var f=state.qFilter;return (state.quotes||[]).filter(function(q){if(f.from&&(q.date||'')<f.from)return false;if(f.to&&(q.date||'')>f.to)return false;if(f.product!=='All'&&!(q.items||[]).some(function(it){return it.product===f.product;}))return false;return true;});}
@@ -2162,34 +2185,33 @@ function _renderSales(v){
 function quoteHTML(q){
   var sub=qSub(q),disc=qDisc(q),vat=qVatAmt(q),grand=qGrand(q);
   var rows=(q.items||[]).map(function(it,i){return '<tr><td class="c1">'+String(i+1).padStart(2,'0')+'</td><td class="c2">'+esc(it.product||'')+'</td><td class="c3">'+esc(it.spec||'').replace(/\n/g,'<br>')+'</td><td class="c4">'+esc(it.qty)+'</td><td class="c5">'+esc(it.unit||'Pc')+'</td><td class="c6">'+money(it.price).replace('SAR ','')+'</td><td class="c7">'+money(qAmt(it)).replace('SAR ','')+'</td></tr>';}).join('');
-  var termsHtml=(q.terms||[]).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
+  var _baseTerms=(q.terms||[]).slice();var _ps=q.presetSel||{};Object.keys(_ps).forEach(function(g){var v=_ps[g];if(v&&_baseTerms.indexOf(v)<0)_baseTerms.push(v);});
+  var termsHtml=_baseTerms.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
   var C={slate:'#252736',gold:'#B88610',ink:'#2A2E37',muted:'#8A93A2',line:'#E6E9EE',soft:'#F5F0E1'};
   return '<!DOCTYPE html><html><head><meta charset="utf-8"><title> </title>'
-    +'<style>@page{margin:0 0 6mm 0;}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:'+C.ink+';margin:0;font-size:12px;}'
-    +'table.pg{width:100%;border-collapse:collapse;}table.pg>tbody>tr>td{padding:0;border:none;}table.pg>thead>tr>td{padding:0 0 22px 0;border:none;}table.pg>tfoot>tr>td{padding:14px 0 0 0;border:none;}thead{display:table-header-group;}tfoot{display:table-footer-group;}'
-    +'.tot,.foot .col,.sign,.box,.meta .b{break-inside:avoid;page-break-inside:avoid;}table.items tr{break-inside:avoid;page-break-inside:avoid;}'
-    +'.hd{background:'+C.slate+';color:#fff;padding:16px 24px;border-bottom:4px solid '+C.gold+';display:flex;justify-content:space-between;align-items:center;}'
+    +'<style>@page{margin:0;}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}html,body{margin:0;}body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:'+C.ink+';font-size:12px;}'
+    +'.sheet{min-height:283mm;display:flex;flex-direction:column;}'
+    +'.hd{background:'+C.slate+';color:#fff;padding:16px 24px;border-bottom:4px solid '+C.gold+';display:flex;justify-content:space-between;align-items:center;flex:0 0 auto;}'
     +'.hd .rt{text-align:right;}'
     +'.hd .lg{display:flex;gap:14px;align-items:center;}.hd img{width:54px;height:54px;border-radius:10px;background:#000;object-fit:cover;}'
     +'.hd h1{margin:0;font-size:20px;letter-spacing:.5px;}.hd .sub{font-size:11px;color:#C6D0DB;margin-top:3px;}'
     +'.hd .qt{font-size:26px;font-weight:800;letter-spacing:3px;color:'+C.gold+';text-align:right;}'
     +'.badge{display:inline-block;border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:4px 12px;font-size:9.5px;letter-spacing:1px;color:#fff;margin-top:8px;}'
-    +'.wrap{padding:0 22px;}'
+    +'.body{flex:1 0 auto;padding:18px 24px 0;}'
     +'.meta{display:flex;gap:12px;margin-bottom:18px;}.meta .b{flex:1;border:1px solid '+C.line+';border-radius:10px;padding:12px 14px;}.meta .lab{font-size:9px;letter-spacing:1px;color:'+C.muted+';text-transform:uppercase;}.meta .val{font-size:14px;font-weight:700;margin-top:4px;}'
     +'.boxes{display:flex;gap:14px;margin-bottom:20px;}.box{flex:1;border:1px solid '+C.line+';border-radius:12px;padding:14px 16px;}.box.from{background:'+C.soft+';border-color:#EAD9B0;}.box .h{font-size:9.5px;letter-spacing:1.2px;color:'+C.gold+';text-transform:uppercase;margin-bottom:8px;font-weight:700;}.box .co{font-size:14px;font-weight:700;margin-bottom:4px;}.box .ln{font-size:11.5px;color:#54607a;line-height:1.65;}'
     +'.sect{font-size:10px;letter-spacing:1.4px;color:'+C.gold+';text-transform:uppercase;font-weight:700;margin:0 0 8px;display:flex;align-items:center;gap:8px;}.sect:before{content:"";width:20px;height:2px;background:'+C.gold+';display:inline-block;}'
-    +'table.items{width:100%;border-collapse:collapse;margin-bottom:18px;}table.items th{background:'+C.slate+';color:#fff;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;padding:10px 10px;text-align:left;}table.items td{padding:12px 10px;border-bottom:1px solid '+C.line+';font-size:12px;vertical-align:top;}'
+    +'table.items{width:100%;border-collapse:collapse;margin-bottom:18px;}table.items th{background:'+C.slate+';color:#fff;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;padding:10px 10px;text-align:left;}table.items td{padding:11px 10px;border-bottom:1px solid '+C.line+';font-size:12px;vertical-align:top;}'
     +'.c1{color:'+C.gold+';font-weight:700;width:34px;}.c2{font-weight:600;}.c4,.c5,.c6,.c7{text-align:right;white-space:nowrap;}.c7{font-weight:700;}table.items th.r{text-align:right;}'
     +'.tot{margin-left:auto;width:300px;}.tot .r{display:flex;justify-content:space-between;padding:7px 14px;font-size:12.5px;}.tot .r.g{background:'+C.slate+';color:#fff;border-radius:10px;font-size:15px;font-weight:800;margin-top:6px;padding:12px 14px;}.tot .r.g b{color:'+C.gold+';}'
     +'.foot{display:flex;gap:16px;margin-top:22px;}.foot .col{flex:1;border:1px solid '+C.line+';border-radius:12px;padding:14px 16px;}.foot ol{margin:0;padding-left:16px;font-size:11px;color:#54607a;line-height:1.7;}.foot .bank div{display:flex;justify-content:space-between;font-size:11.5px;padding:3px 0;border-bottom:1px dashed '+C.line+';}.foot .bank .k{color:'+C.gold+';}'
     +'.sign{display:flex;gap:40px;margin-top:26px;}.sign .s{flex:1;border-top:1px solid #B9C1CC;padding-top:6px;font-size:10px;color:'+C.muted+';text-transform:uppercase;letter-spacing:.5px;}'
-    +'.pgfoot{border-top:2px solid '+C.gold+';padding:9px 24px 3px;font-size:10.5px;color:'+C.muted+';display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}'
-    +'</style></head><body><table class="pg"><thead><tr><td>'
+    +'.pgfoot{flex:0 0 auto;border-top:2px solid '+C.gold+';padding:10px 24px;margin-top:20px;font-size:10.5px;color:'+C.muted+';display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}'
+    +'.meta .b,.box,.tot,.foot .col,.sign,table.items tr{break-inside:avoid;page-break-inside:avoid;}'
+    +'@media screen{body{width:794px;margin:0 auto;}.sheet{box-shadow:0 0 0 1px #eee;}}'
+    +'</style></head><body><div class="sheet">'
     +'<div class="hd"><div class="lg"><img src="'+LOGO+'"/><div><h1>KSA PALLETS</h1><div class="sub">A Division of Zeeta Contracting Company</div></div></div><div class="rt"><div class="qt">QUOTATION</div><div style="margin-top:6px;"><span class="badge">VALID FOR 30 DAYS</span></div></div></div>'
-    +'</td></tr></thead>'
-    +'<tfoot><tr><td><div class="pgfoot"><span>KSA PALLETS · '+esc(QUOTE_FROM.web)+' · Kingdom of Saudi Arabia</span><span>'+esc(q.number)+((q.rev&&q.showRev!==false)?' · Rev '+q.rev:'')+'</span></div></td></tr></tfoot>'
-    +'<tbody><tr><td>'
-    +'<div class="wrap">'
+    +'<div class="body">'
     +'<div class="meta"><div class="b"><div class="lab">Quote No.</div><div class="val">'+esc(q.number)+((q.rev&&q.showRev!==false)?' · Rev '+q.rev:'')+'</div></div><div class="b"><div class="lab">Date Issued</div><div class="val">'+human(q.date)+'</div></div><div class="b"><div class="lab">Valid Until</div><div class="val">'+human(q.validUntil)+'</div></div></div>'
     +'<div class="boxes"><div class="box"><div class="h">Billed To</div><div class="co">'+esc(q.client.company||'—')+'</div><div class="ln">'+(q.client.attention?'Attention: '+esc(q.client.attention)+'<br>':'')+(q.client.address?esc(q.client.address)+'<br>':'')+(q.client.tel?'Tel: '+esc(q.client.tel)+'<br>':'')+(q.client.email?'Email: '+esc(q.client.email)+'<br>':'')+(q.client.vat?'VAT No: '+esc(q.client.vat):'')+'</div></div>'
     +'<div class="box from"><div class="h">From</div><div class="co">'+esc(QUOTE_FROM.name)+'</div><div class="ln">'+esc(QUOTE_FROM.cities)+'<br>C.R: '+esc(QUOTE_FROM.cr)+' · VAT: '+esc(QUOTE_VATNO)+'<br>'+esc(QUOTE_FROM.phones)+'<br>'+esc(QUOTE_FROM.email)+'</div></div></div>'
@@ -2204,7 +2226,10 @@ function quoteHTML(q){
     +'<div class="col bank"><div class="sect">Bank Details</div><div><span class="k">Bank</span><span>'+esc(QUOTE_BANK.bank)+'</span></div><div><span class="k">Account</span><span>'+esc(QUOTE_BANK.account)+'</span></div><div><span class="k">A/C No.</span><span>'+esc(QUOTE_BANK.acno)+'</span></div><div><span class="k">IBAN</span><span>'+esc(QUOTE_BANK.iban)+'</span></div><div><span class="k">SWIFT</span><span>'+esc(QUOTE_BANK.swift)+'</span></div></div></div>'
     +'<div class="sign"><div class="s">Authorized Signature</div><div class="s">Name &amp; Designation</div><div class="s">Date</div></div>'
     +'</div>'
-    +'</td></tr></tbody></table></body></html>';
+    +'<div class="pgfoot"><span>KSA PALLETS · '+esc(QUOTE_FROM.web)+' · Kingdom of Saudi Arabia</span><span>'+esc(q.number)+((q.rev&&q.showRev!==false)?' · Rev '+q.rev:'')+'</span></div>'
+    +'</div>'
+    +'<script>window.addEventListener("load",function(){try{var h=document.body.scrollHeight;if(h>1080){var z=1069/h;document.body.style.zoom=(z<0.5?0.5:z);}}catch(e){}});<\/script>'
+    +'</body></html>';
 }
 
 function reportHTML(){
@@ -2282,7 +2307,7 @@ function closeModal(){closeDP();state.modalOpen=false;state.editId=null;state.lo
 function openDetail(id){
   var c=state.clients.find(function(x){return x.id===id;});if(!c)return;state.modalOpen=true;
   function row(k,v){return '<div class="detail-row"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>';}
-  var body=row('Company',esc(c.company))
+  var body=row('Company',esc(c.company)+inqTag(c))
     +row('Contact person',esc(c.contact||'—'))
     +row('Phone / WhatsApp',c.phone?'<a href="tel:'+esc(c.phone)+'" style="color:var(--accentDk);">'+esc(c.phone)+'</a>':'—')
     +row('Email',c.email?'<a href="mailto:'+esc(c.email)+'" style="color:var(--accentDk);">'+esc(c.email)+'</a>':'—')
@@ -2329,10 +2354,10 @@ function openEdit(id){ if(!id&&!can('addInquiry')){toast('You do not have permis
     +'<div class="formsec"><span class="sq"></span>Products &amp; quotation</div>'
     +'<div style="grid-column:1/-1;"><label class="field-label">Product(s) inquired — tick any, or add your own</label><div class="ms" id="ms"><div class="ms-trigger" id="msTrigger"></div><div class="ms-panel" id="msPanel"><div id="msOpts"></div><div style="display:flex;gap:6px;padding:6px;border-top:1px solid var(--lineSoft);"><input id="msOther" placeholder="Other product…" style="flex:1;"/><button type="button" class="btn btn-ghost btn-sm" id="msAdd">Add</button></div></div></div></div>'
     +'<div><label class="field-label">Quotation submitted?</label><div class="seg" id="segQuote"><button type="button" data-q="Yes" class="'+(state.formQuote==='Yes'?'on':'')+'">Yes</button><button type="button" data-q="No" class="'+(state.formQuote==='No'?'on':'')+'">No</button></div></div>'
-    +'<div id="quoteWrap" style="display:'+(state.formQuote==='Yes'?'block':'none')+';"><label class="field-label">Quotation value</label><input id="f_quote" value="'+esc(c.quoteValue||'')+'" placeholder="SAR 18,500"/></div>'
+    +'<div id="quoteWrap" style="display:'+(state.formQuote==='Yes'?'block':'none')+';"><label class="field-label">Quotation value</label><input id="f_quote" value="'+esc(c.quoteValue||'')+'" placeholder="SAR 18,500"/><label class="field-label" style="margin-top:10px;">Quotation submitted on</label><input type="date" id="f_quoteDate" value="'+esc(c.quoteDate||today())+'"/><div style="font-size:11px;color:var(--muted);margin-top:4px;">Follow-ups count from this date.</div></div>'
     +'<div class="formsec"><span class="sq"></span>Notes</div>'
     +'<div style="grid-column:1/-1;"><textarea id="f_notes" rows="2" placeholder="Sizes, treatment, requirements…">'+esc(c.notes||'')+'</textarea></div>'
-    +'<div style="grid-column:1/-1;font-size:12px;color:var(--muted);background:var(--accentBg);padding:11px 13px;border-radius:10px;">'+(state.formQuote==='Yes'?'Scheduled in working days — Fridays are never counted. You can edit any date later and the rest shift with it: '+SCHEDULE.map(function(s){return humanDay(dueDate({inquiryDate:c.inquiryDate||today(),followups:c.followups},s));}).join(' · '):'Follow-up schedule starts once the quotation is submitted.')+'</div>'
+    +'<div style="grid-column:1/-1;font-size:12px;color:var(--muted);background:var(--accentBg);padding:11px 13px;border-radius:10px;">'+(state.formQuote==='Yes'?'Scheduled in working days from the quotation date — Fridays are never counted. You can edit any date later and the rest shift with it: '+SCHEDULE.map(function(s){return humanDay(dueDate({inquiryDate:c.inquiryDate||today(),quoteDate:(c.quoteDate||today()),followups:c.followups},s));}).join(' · '):'Follow-up schedule starts once the quotation is submitted.')+'</div>'
     +'</div>'
     +'<div style="padding:15px 26px;border-top:1px solid var(--lineSoft);display:flex;justify-content:flex-end;gap:10px;"><button class="btn btn-ghost" data-close="1">Cancel</button><button class="btn btn-primary" id="saveClient">'+(id?'Save changes':'Add inquiry')+'</button></div></div></div>';
   bindMultiselect();bindQuoteToggle();bindRespToggle();bindLocation();enhanceAll(document.getElementById('overlay'));bindCompanyAC();
@@ -2373,7 +2398,7 @@ function saveClientForm(){
   var data={company:company,contact:g('f_contact'),source:g('f_source'),phone:g('f_phone'),email:g('f_email'),location:loc,products:state.formProducts.slice(),
     inquiryDate:g('f_date')||today(),inquiryTime:g('f_inqTime'),
     responded:state.formResp,responseDate:state.formResp==='Yes'?(g('f_respDate')||today()):'',responseTime:state.formResp==='Yes'?g('f_respTime'):'',
-    quoteShared:state.formQuote,quoteValue:state.formQuote==='Yes'?g('f_quote'):'',notes:g('f_notes')};
+    quoteShared:state.formQuote,quoteValue:state.formQuote==='Yes'?g('f_quote'):'',quoteDate:state.formQuote==='Yes'?(g('f_quoteDate')||today()):'',notes:g('f_notes')};
   var id=state.editId;
   if(id){logAct('Edited inquiry',company,'',id);var obj=Object.assign({},state.clients.find(function(x){return x.id===id;}),data);mutate(function(list){return list.map(function(c){return c.id===id?obj:c;});},obj);}
   else{var nc=Object.assign({id:uid(),status:'Active',stopFollowup:false,stopReason:'',stopResumeDate:'',lostReason:'',followups:{}},data);logAct('Added inquiry',company,'',nc.id);mutate(function(list){return list.concat([nc]);},nc);}
@@ -2423,7 +2448,7 @@ function renderLog(){
     +(!c.stopFollowup&&c.status==='Active'?'<button class="btn btn-ghost btn-sm" data-act="stop" data-id="'+c.id+'">'+ic('stop',14)+' Stop follow-ups</button>':'')
     +(c.status!=='Active'?'<button class="btn btn-ghost btn-sm" data-act="reopen" data-id="'+c.id+'">Reopen as active</button>':'')
     +'</div>';
-  document.getElementById('overlay').innerHTML='<div class="overlay" data-close="1"><div class="modal" data-stop="1" style="max-width:660px;"><div class="mh" style="display:block;"><div style="display:flex;justify-content:space-between;align-items:center;"><span class="mt">'+esc(c.company)+'</span><button class="icon-btn" data-close="1">'+ic('x',17)+'</button></div><div class="ms">'+esc(c.contact)+' · '+esc(c.phone)+(c.location?' · '+esc(c.location):'')+' · '+(c.products||[]).join(', ')+'</div>'+outcome+'</div><div style="padding:8px 26px 6px;max-height:440px;overflow:auto;">'+body+'</div><div style="padding:15px 26px;border-top:1px solid var(--lineSoft);display:flex;justify-content:flex-end;gap:10px;"><button class="btn btn-ghost" data-close="1">Close</button><button class="btn btn-primary" id="saveLog">Save follow-ups</button></div></div></div>';
+  document.getElementById('overlay').innerHTML='<div class="overlay" data-close="1"><div class="modal" data-stop="1" style="max-width:660px;"><div class="mh" style="display:block;"><div style="display:flex;justify-content:space-between;align-items:center;"><span class="mt">'+esc(c.company)+inqTagPlain(c)+'</span><button class="icon-btn" data-close="1">'+ic('x',17)+'</button></div><div class="ms">'+esc(c.contact)+' · '+esc(c.phone)+(c.location?' · '+esc(c.location):'')+' · '+(c.products||[]).join(', ')+'</div>'+outcome+'</div><div style="padding:8px 26px 6px;max-height:440px;overflow:auto;">'+body+'</div><div style="padding:15px 26px;border-top:1px solid var(--lineSoft);display:flex;justify-content:flex-end;gap:10px;"><button class="btn btn-ghost" data-close="1">Close</button><button class="btn btn-primary" id="saveLog">Save follow-ups</button></div></div></div>';
   enhanceAll(document.getElementById('overlay'));
 }
 function readRemarks(){
@@ -2456,7 +2481,18 @@ async function saveLog(){readRemarks();var id=state.logId;var d=state.logTemp;va
 
 function cname(id){var c=state.clients.find(function(x){return x.id===id;});return c?c.company:'';}
 function patch(id,fields){var obj=Object.assign({},state.clients.find(function(x){return x.id===id;}),fields);mutate(function(list){return list.map(function(c){return c.id===id?obj:c;});},obj);}
-function actShare(id){logAct('Quotation submitted',cname(id),'',id);patch(id,{quoteShared:'Yes'});if(state.logId===id)renderLog();}
+function openShare(id){ if(!can('editInquiry')){toast('You do not have permission to change status.');return;} state.modalOpen=true;var c=state.clients.find(function(x){return x.id===id;});
+  document.getElementById('overlay').innerHTML='<div class="overlay" data-close="1"><div class="modal" data-stop="1" style="max-width:440px;"><div class="mh"><span class="mt">Quotation submitted</span><button class="icon-btn" data-close="1">'+ic('x',17)+'</button></div>'
+    +'<div style="padding:22px;display:grid;gap:15px;">'
+    +'<div style="font-size:13px;color:var(--ink2);">Record when you sent the quotation to <b>'+esc(c.company)+'</b>. The follow-up schedule starts from this date (not the inquiry date), so follow-ups won\'t show as missed.</div>'
+    +'<div><label class="field-label">Quotation submitted on</label><input type="date" id="sh_date" value="'+esc(c.quoteDate||today())+'"/></div>'
+    +'<div><label class="field-label">Quotation value <span style="color:var(--muted);font-weight:400;">(optional)</span></label><input id="sh_value" value="'+esc(c.quoteValue||'')+'" placeholder="SAR 18,500"/></div>'
+    +'</div>'
+    +'<div style="padding:15px 22px;border-top:1px solid var(--lineSoft);display:flex;justify-content:flex-end;gap:10px;"><button class="btn btn-ghost" data-close="1">Cancel</button><button class="btn btn-primary" data-savesubmit="'+id+'">'+ic('check',15)+' Mark submitted</button></div></div></div>';
+  enhanceAll(document.getElementById('overlay'));
+}
+function saveShare(id){var g=function(f){var e=document.getElementById(f);return e?e.value:'';};var d=g('sh_date')||today();var v=g('sh_value');logAct('Quotation submitted',cname(id),'sent '+humanDay(d),id);patch(id,{quoteShared:'Yes',quoteDate:d,quoteValue:v});closeModal();}
+function actShare(id){openShare(id);}
 function clientQuoteValue(c){var v=parseAmt(c.quoteValue);if(v>0)return v;var qs=(state.quotes||[]).filter(function(q){return q.clientId===c.id;});if(qs.length){return qGrand(qs[qs.length-1]);}return 0;}
 function openWon(id){
   state.modalOpen=true;var c=state.clients.find(function(x){return x.id===id;});
@@ -2606,7 +2642,10 @@ document.addEventListener('click',function(e){
   if(e.target.closest('[data-qaddrow]')){e.preventDefault();qAddRow();return;}
   var qdr=e.target.closest('[data-qdelrow]');if(qdr){e.preventDefault();qDelRow(+qdr.getAttribute('data-qdelrow'));return;}
   if(e.target.closest('[data-qaddterm]')){e.preventDefault();qAddTerm();return;}
-  if(e.target.closest('[data-qsetaddterm]')){e.preventDefault();var nt=(document.getElementById('qset_newterm')||{}).value||'';if(nt.trim()){QUOTE_TERMS=QUOTE_TERMS.concat([nt.trim()]);saveSettings();}return;}
+  if(e.target.closest('[data-qtermssave]')){e.preventDefault();var tv=(document.getElementById('qset_terms')||{}).value||'';var arr=tv.split('\n').map(function(s){return s.trim();}).filter(Boolean);QUOTE_TERMS=arr;saveSettings();toast('Terms saved \u2713');return;}
+  if(e.target.closest('[data-qpresetsave]')){e.preventDefault();QUOTE_PRESETS=readPresetsFromDOM();saveSettings();toast('Quick terms saved \u2713');return;}
+  if(e.target.closest('[data-qpgadd]')){e.preventDefault();var gn=(document.getElementById('qpg_new')||{}).value||'';var cur=readPresetsFromDOM();if(gn.trim())cur.push({label:gn.trim(),options:[]});QUOTE_PRESETS=cur;saveSettings();return;}
+  var qpgd=e.target.closest('[data-qpgdel]');if(qpgd){e.preventDefault();var gi=+qpgd.getAttribute('data-qpgdel');if(confirm('Remove this whole term group?')){var cur2=readPresetsFromDOM();cur2.splice(gi,1);QUOTE_PRESETS=cur2;saveSettings();}return;}
   var qtr=e.target.closest('[data-qtermrm]');if(qtr){e.preventDefault();var ti=+qtr.getAttribute('data-qtermrm');QUOTE_TERMS=QUOTE_TERMS.filter(function(_,i){return i!==ti;});saveSettings();return;}
   var qlq=e.target.closest('[data-qlq]');if(qlq){e.preventDefault();var lw=qlq.getAttribute('data-qlq');var lt=today();if(lw==='all'){state.qListF.from='';state.qListF.to='';}else if(lw==='ytd'){state.qListF.from=lt.slice(0,4)+'-01-01';state.qListF.to=lt;}else{state.qListF.to=lt;state.qListF.from=addDays(lt,-(+lw));}render();return;}
   var qrq=e.target.closest('[data-qrq]');if(qrq){e.preventDefault();var qw=qrq.getAttribute('data-qrq');var qt=today();if(qw==='all'){state.qFilter.from='';state.qFilter.to='';}else if(qw==='ytd'){state.qFilter.from=qt.slice(0,4)+'-01-01';state.qFilter.to=qt;}else{state.qFilter.to=qt;state.qFilter.from=addDays(qt,-(+qw));}render();return;}
@@ -2693,6 +2732,7 @@ document.addEventListener('click',function(e){
   var qk=e.target.closest('[data-quick]');if(qk){applyQuick(qk.getAttribute('data-quick'));return;}
   var aq=e.target.closest('[data-actq]');if(aq){var q=aq.getAttribute('data-actq');if(q==='clear'){state.actF={from:'',to:'',person:'All',type:'All'};}else if(q==='today'){state.actF.from=today();state.actF.to=today();}else{state.actF.to=today();state.actF.from=addDays(today(),-(+q));}state.page.act=1;render();return;}
   if(e.target.closest('#btnPDF')){downloadPDF();return;}
+  var svsub=e.target.closest('[data-savesubmit]');if(svsub){e.preventDefault();saveShare(svsub.getAttribute('data-savesubmit'));return;}
   var svs=e.target.closest('[data-savestop]');if(svs){e.preventDefault();saveStop(svs.getAttribute('data-savestop'));return;}
   var svw=e.target.closest('[data-savewon]');if(svw){e.preventDefault();saveWon(svw.getAttribute('data-savewon'));return;}
   var sau=e.target.closest('[data-stepauto]');if(sau){e.preventDefault();resetStepDate(sau.getAttribute('data-stepauto'));return;}
@@ -2775,7 +2815,7 @@ document.addEventListener('change',function(e){
   else if(e.target.id==='qset_fphones'){QUOTE_FROM=Object.assign({},QUOTE_FROM,{phones:e.target.value});saveSettings();}
   else if(e.target.id==='qset_femail'){QUOTE_FROM=Object.assign({},QUOTE_FROM,{email:e.target.value});saveSettings();}
   else if(e.target.id==='qset_fweb'){QUOTE_FROM=Object.assign({},QUOTE_FROM,{web:e.target.value});saveSettings();}
-  else if(e.target.getAttribute&&e.target.getAttribute('data-qtermedit')!=null&&e.target.getAttribute('data-qtermedit')!==''){var qi=+e.target.getAttribute('data-qtermedit');if(QUOTE_TERMS[qi]!=null){QUOTE_TERMS[qi]=e.target.value;saveSettings();}}
+
 });
 document.addEventListener('input',function(e){function keepFocus(id,fn){var el=e.target;var pos=el.selectionStart;fn();var ni=document.getElementById(id);if(ni){try{ni.focus();ni.setSelectionRange(pos,pos);}catch(x){ni.focus();}}}
   if(e.target.id==='search'){keepFocus('search',function(){state.search=e.target.value;document.getElementById('view').innerHTML=viewInquiries();enhanceAll(document.getElementById('view'));});}
