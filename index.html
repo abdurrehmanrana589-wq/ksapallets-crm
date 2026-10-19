@@ -2737,7 +2737,8 @@ function openDnCompanyHistory(compId){
 /* ============================================================ STATEMENT OF ACCOUNT (SOA) ============================================================ */
 function soaNumber(){var yr=new Date().getFullYear();var mx=0;(state.soas||[]).forEach(function(s){var m=/SOA-(\d{4})-(\d+)/.exec(s.number||'');if(m&&+m[1]===yr){var n=+m[2];if(n>mx)mx=n;}});return 'SOA-'+yr+'-'+String(mx+1).padStart(4,'0');}
 function soaFind(id){return (state.soas||[]).find(function(x){return x.id===id;});}
-function newSoa(){return {id:uid(),number:soaNumber(),date:today(),from:today().slice(0,4)+'-01-01',to:today(),client:{company:'',attention:'',address:'',vat:''},opening:0,rows:[{date:today(),invoice:'',dn:'',debit:'',credit:''}],notes:'',stamp:false,createdTs:Date.now(),by:(state.me||OWNER)};}
+function soaCols(s){return Object.assign({date:true,material:true,invoice:true,dn:true},(s&&s.cols)||{});}
+function newSoa(){return {id:uid(),number:soaNumber(),date:today(),from:today().slice(0,4)+'-01-01',to:today(),client:{company:'',attention:'',address:'',vat:''},opening:0,rows:[{date:today(),material:'',invoice:'',dn:'',debit:'',credit:''}],cols:{date:false,material:true,invoice:true,dn:true},notes:'',stamp:false,createdTs:Date.now(),by:(state.me||OWNER)};}
 function soaAmt(v){return parseFloat(String(v==null?'':v).replace(/[^0-9.\-]/g,''))||0;}
 function soaRunning(s){var bal=soaAmt(s.opening);return (s.rows||[]).map(function(r){bal+=soaAmt(r.debit)-soaAmt(r.credit);return bal;});}
 function soaTotals(s){var td=0,tc=0;(s.rows||[]).forEach(function(r){td+=soaAmt(r.debit);tc+=soaAmt(r.credit);});var closing=soaAmt(s.opening)+td-tc;return {debit:td,credit:tc,closing:closing};}
@@ -2752,11 +2753,12 @@ function readSoaForm(){var s=state.editingSoa;if(!s)return;var g=function(id){va
   s.client.company=g('soa_company');s.client.attention=g('soa_attn');s.client.address=g('soa_addr');s.client.vat=g('soa_vat');
   s.opening=soaAmt(g('soa_opening'));s.notes=g('soa_notes');
   var st=document.getElementById('soa_stamp');s.stamp=st?st.checked:!!s.stamp;
-  var rows=[];Array.prototype.forEach.call(document.querySelectorAll('[data-sr]'),function(row){var f=function(n){var e=row.querySelector('[data-srf="'+n+'"]');return e?e.value:'';};rows.push({date:f('date'),invoice:f('invoice'),dn:f('dn'),debit:f('debit'),credit:f('credit')});});
+  var rows=[];Array.prototype.forEach.call(document.querySelectorAll('[data-sr]'),function(row,i){var ex=(s.rows&&s.rows[i])||{};var o=Object.assign({},ex);['date','material','invoice','dn','debit','credit'].forEach(function(k){var e=row.querySelector('[data-srf="'+k+'"]');if(e)o[k]=e.value;});rows.push(o);});
   if(rows.length)s.rows=rows;
+  s.cols=s.cols||{};['date','material','invoice','dn'].forEach(function(k){var e=document.getElementById('soacol_'+k);if(e)s.cols[k]=e.checked;});
 }
-function soaAddRow(){readSoaForm();var last=state.editingSoa.rows[state.editingSoa.rows.length-1];state.editingSoa.rows.push({date:(last&&last.date)||today(),invoice:'',dn:'',debit:'',credit:''});renderSoa();}
-function soaDelRow(i){readSoaForm();state.editingSoa.rows.splice(i,1);if(!state.editingSoa.rows.length)state.editingSoa.rows.push({date:today(),invoice:'',dn:'',debit:'',credit:''});renderSoa();}
+function soaAddRow(){readSoaForm();var last=state.editingSoa.rows[state.editingSoa.rows.length-1];state.editingSoa.rows.push({date:(last&&last.date)||today(),material:'',invoice:'',dn:'',debit:'',credit:''});renderSoa();}
+function soaDelRow(i){readSoaForm();state.editingSoa.rows.splice(i,1);if(!state.editingSoa.rows.length)state.editingSoa.rows.push({date:today(),material:'',invoice:'',dn:'',debit:'',credit:''});renderSoa();}
 function soaPickClient(cid){readSoaForm();var c=state.clients.find(function(x){return x.id===cid;});if(c){var s=state.editingSoa;s.client.company=c.company||'';s.client.attention=c.contact?('Mr. '+c.contact):s.client.attention;s.client.address=c.location||s.client.address;}renderSoa();}
 function soaAddFromDNs(){
   readSoaForm();var s=state.editingSoa;var comp=(s.client.company||'').trim().toLowerCase();
@@ -2769,16 +2771,19 @@ function soaAddFromDNs(){
 }
 function soaDoAddDNs(){
   var ids=[];Array.prototype.forEach.call(document.querySelectorAll('[data-sdn]'),function(cb){if(cb.checked)ids.push(cb.getAttribute('data-sdn'));});
-  var s=state.editingSoa;ids.forEach(function(id){var d=dnFind(id);if(!d)return;s.rows.push({date:d.date||today(),invoice:(d.invoiceNo||''),dn:'#'+d.dnNum+(d.po?' (PO '+d.po+')':''),debit:'',credit:'',dnId:id});});
+  var s=state.editingSoa;ids.forEach(function(id){var d=dnFind(id);if(!d)return;var mat=(d.items||[]).map(function(it){return (it.qty||'')+' '+(it.unit||'')+' '+(it.desc||'');}).join('; ');s.rows.push({date:d.date||today(),material:mat,invoice:(d.invoiceNo||''),dn:'#'+d.dnNum+(d.po?' (PO '+d.po+')':''),debit:'',credit:'',dnId:id});});
   state.modalOpen=true;renderSoa();if(ids.length)toast(ids.length+' delivery note(s) added — now enter the amounts.');
 }
 function renderSoa(){
   var s=state.editingSoa;var ex=soaFind(s.id);var bals=soaRunning(s);var T=soaTotals(s);
-  var rowsHtml=(s.rows||[]).map(function(r,i){return '<div class="qrow" data-sr="'+i+'" style="grid-template-columns:28px 112px 1fr 1fr 92px 92px 26px;align-items:center;">'
-    +'<div style="padding-top:9px;font-size:12px;color:var(--muted);font-weight:700;">'+String(i+1).padStart(2,'0')+'</div>'
-    +'<input type="date" data-srf="date" value="'+esc(r.date||'')+'"/>'
-    +'<input data-srf="invoice" value="'+esc(r.invoice||r.ref||'')+'" placeholder="Invoice # / note"/>'
-    +'<input data-srf="dn" value="'+esc(r.dn||'')+'" placeholder="Delivery note #"/>'
+  var CC=soaCols(s);
+  var _opt=[['date','Date','112px'],['material','Material description','1.6fr'],['invoice','Invoice no','1fr'],['dn','Delivery note','1fr']].filter(function(c){return CC[c[0]];});
+  var _grid='28px '+_opt.map(function(c){return c[2];}).join(' ')+' 92px 92px 26px';
+  var soaToggles='<div style="display:flex;gap:16px;flex-wrap:wrap;margin:2px 0 10px;">'+[['date','Date'],['material','Material description'],['invoice','Invoice no'],['dn','Delivery note']].map(function(c){return '<label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink2);"><input type="checkbox" data-soacol="'+c[0]+'" id="soacol_'+c[0]+'" '+(CC[c[0]]?'checked':'')+'/> '+c[1]+'</label>';}).join('')+'</div>';
+  var soaHead='<div class="qhead" style="grid-template-columns:'+_grid+';"><span>#</span>'+_opt.map(function(c){return '<span>'+esc(c[1])+'</span>';}).join('')+'<span>Debit</span><span>Credit</span><span></span></div>';
+  var rowsHtml=(s.rows||[]).map(function(r,i){var cells=_opt.map(function(c){if(c[0]==='date')return '<input type="date" data-srf="date" value="'+esc(r.date||'')+'"/>';return '<input data-srf="'+c[0]+'" value="'+esc(r[c[0]]||(c[0]==='invoice'?(r.ref||''):''))+'" placeholder="'+esc(c[1])+'"/>';}).join('');
+    return '<div class="qrow" data-sr="'+i+'" style="grid-template-columns:'+_grid+';align-items:center;">'
+    +'<div style="padding-top:9px;font-size:12px;color:var(--muted);font-weight:700;">'+String(i+1).padStart(2,'0')+'</div>'+cells
     +'<input type="number" step="0.01" data-srf="debit" value="'+esc(r.debit)+'" placeholder="Debit"/>'
     +'<input type="number" step="0.01" data-srf="credit" value="'+esc(r.credit)+'" placeholder="Credit"/>'
     +'<button class="icon-btn" data-soadelrow="'+i+'" title="Remove">'+ic('trash',14)+'</button></div>';}).join('');
@@ -2800,8 +2805,10 @@ function renderSoa(){
     +'<div><label class="field-label">VAT No.</label><input id="soa_vat" value="'+esc(s.client.vat)+'"/></div>'
     +'<div style="grid-column:1/-1;"><label class="field-label">Address / City</label><input id="soa_addr" value="'+esc(s.client.address)+'" placeholder="City, Saudi Arabia"/></div>'
     +'</div>'
+    +'<div class="formsec"><span class="sq"></span>Columns <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;">— tick which columns appear on the statement</span></div>'
+    +soaToggles
     +'<div class="formsec"><span class="sq"></span>Ledger <span style="font-weight:400;color:var(--muted);text-transform:none;letter-spacing:0;">— debit = invoice/owed, credit = payment received</span></div>'
-    +'<div class="qhead" style="grid-template-columns:28px 112px 1fr 1fr 92px 92px 26px;"><span>#</span><span>Date</span><span>Invoice</span><span>Delivery Note</span><span>Debit</span><span>Credit</span><span></span></div>'
+    +soaHead
     +rowsHtml
     +'<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;"><button class="btn btn-ghost btn-sm" data-soaaddrow="1">'+ic('plus',14)+' Add row</button><button class="btn btn-ghost btn-sm" data-soaadddnpick="1">'+ic('box',14)+' Add from delivery notes</button></div>'
     +'<div style="background:#F8F9FB;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:16px;max-width:360px;margin-left:auto;">'
@@ -2855,11 +2862,16 @@ function _renderSoa(v){
 function soaHTML(s){
   var bals=soaRunning(s);var T=soaTotals(s);
   var C={slate:'#20232E',gold:'#B88610',ink:'#262B36',muted:'#8A93A2',line:'#EAECF1',soft:'#FBFAF6'};
-  var openRow=soaAmt(s.opening)?('<tr class="op"><td class="c1"></td><td class="c2"></td><td class="c3" colspan="2">Opening balance</td><td class="c4">-</td><td class="c5">-</td><td class="c6">'+money(soaAmt(s.opening)).replace('SAR ','')+'</td></tr>'):'';
+  var CC=soaCols(s);
+  var cdefs=[];
+  if(CC.date)cdefs.push({k:'date',label:'Date',cls:'c2',cell:function(r){return r.date?human(r.date):'';}});
+  if(CC.material)cdefs.push({k:'material',label:'Material Description',cls:'c3',cell:function(r){return esc(r.material||'');}});
+  if(CC.invoice)cdefs.push({k:'invoice',label:'Invoice No',cls:'c3',cell:function(r){return esc(r.invoice||r.ref||'');}});
+  if(CC.dn)cdefs.push({k:'dn',label:'Delivery Note',cls:'c3b',cell:function(r){return esc(r.dn||'');}});
+  var theadCols='<th>SR#</th>'+cdefs.map(function(c){return '<th class="l">'+c.label+'</th>';}).join('')+'<th class="r">Debit (SAR)</th><th class="r">Credit (SAR)</th><th class="r last c6h">Balance (SAR)</th>';
+  var openRow=soaAmt(s.opening)?('<tr class="op"><td class="c1"></td>'+(cdefs.length?'<td class="c3" colspan="'+cdefs.length+'">Opening balance</td>':'')+'<td class="c4">-</td><td class="c5">-</td><td class="c6">'+money(soaAmt(s.opening)).replace('SAR ','')+'</td></tr>'):'';
   var rows=(s.rows||[]).map(function(r,i){return '<tr><td class="c1">'+String(i+1).padStart(2,'0')+'</td>'
-    +'<td class="c2">'+(r.date?human(r.date):'')+'</td>'
-    +'<td class="c3">'+esc(r.invoice||r.ref||'')+'</td>'
-    +'<td class="c3b">'+esc(r.dn||'')+'</td>'
+    +cdefs.map(function(c){return '<td class="'+c.cls+'">'+c.cell(r)+'</td>';}).join('')
     +'<td class="c4">'+(soaAmt(r.debit)?money(soaAmt(r.debit)).replace('SAR ',''):'<span class="dash">-</span>')+'</td>'
     +'<td class="c5">'+(soaAmt(r.credit)?money(soaAmt(r.credit)).replace('SAR ',''):'<span class="dash">-</span>')+'</td>'
     +'<td class="c6">'+money(bals[i]).replace('SAR ','')+'</td></tr>';}).join('');
@@ -2912,7 +2924,7 @@ function soaHTML(s){
     +'<div class="body">'
     +'<div class="top"><div class="who"><div class="k">Statement For</div><div class="co">'+esc(s.client.company||'—')+'</div><div class="ln">'+(s.client.attention?esc(s.client.attention)+'<br>':'')+(s.client.address?esc(s.client.address)+'<br>':'')+(s.client.vat?'VAT No: '+esc(s.client.vat):'')+'</div></div>'
     +'<div class="sm"><div class="row"><span>Statement No.</span><b>'+esc(s.number)+'</b></div><div class="row"><span>Date</span><b>'+human(s.date)+'</b></div><div class="row"><span>Period</span><b>'+(s.from?human(s.from):'—')+' → '+(s.to?human(s.to):'—')+'</b></div></div></div>'
-    +'<table class="led"><thead><tr><th>SR#</th><th class="l">Date</th><th class="l">Invoice</th><th class="l">Delivery Note</th><th class="r">Debit (SAR)</th><th class="r">Credit (SAR)</th><th class="r last c6h">Overdue (SAR)</th></tr></thead><tbody>'+openRow+rows+'</tbody></table>'
+    +'<table class="led"><thead><tr>'+theadCols+'</tr></thead><tbody>'+openRow+rows+'</tbody></table>'
     +'<div class="sumwrap"><div class="sum"><div class="r"><span>Total Debit</span><b>'+money(T.debit)+'</b></div><div class="r"><span>Total Credit</span><b>'+money(T.credit)+'</b></div><div class="r due"><span class="lbl">BALANCE DUE / OVERDUE</span><b>'+money(due)+'</b></div></div></div>'
     +(s.notes?'<div class="note"><b>Note:</b> '+esc(s.notes)+'</div>':'')
     +'<div class="note" style="border-left-color:'+C.slate+';"><b>Bank:</b> '+esc(QUOTE_BANK.bank)+' &nbsp;·&nbsp; A/C '+esc(QUOTE_BANK.account)+' &nbsp;·&nbsp; '+esc(QUOTE_BANK.acno)+' &nbsp;·&nbsp; IBAN '+esc(QUOTE_BANK.iban)+' &nbsp;·&nbsp; SWIFT '+esc(QUOTE_BANK.swift)+'</div>'
@@ -3502,12 +3514,13 @@ document.addEventListener('mouseout',function(e){var c=e.target.closest('[data-n
 /* filters + search + editable follow-up dates */
 document.addEventListener('change',function(e){
   var id=e.target.id;
+  if(e.target.getAttribute&&e.target.getAttribute('data-soacol')!=null){readSoaForm();renderSoa();return;}
   if(id==='dn_month'){state.dnMonth=e.target.value;render();return;}
   if(id==='sales_month'){state.salesF=state.salesF||{};state.salesF.month=e.target.value;render();return;}
   if(id==='sales_product'){state.salesF=state.salesF||{};state.salesF.product=e.target.value;render();return;}
   if(id==='po_issuer'||id==='po_discon'||id==='po_vaton'){readPOForm();renderPO();return;}
   if(e.target.getAttribute&&e.target.getAttribute('data-settarget')){var co=e.target.getAttribute('data-settarget');var mo=(state.salesF&&state.salesF.month)||ymNow();if(!Array.isArray(state.sales))state.sales=[];var ref='tgt:'+co.toLowerCase()+'|'+mo;var te=null;for(var ti=0;ti<state.sales.length;ti++){if(state.sales[ti].tgtRef===ref){te=state.sales[ti];break;}}if(!te){te={id:uid(),tgtRef:ref,company:co,month:mo,product:'',target:0,weeks:[0,0,0,0,0],note:'Target',createdTs:Date.now(),by:(state.me||OWNER)};state.sales.push(te);}te.target=parseAmt(e.target.value);apiSaveAll();render();return;}
-  if(e.target.getAttribute&&e.target.getAttribute('data-stepchan')){var sk=e.target.getAttribute('data-stepchan');readRemarks();state.logTemp[sk]=Object.assign({},state.logTemp[sk]||{},{channel:e.target.value});renderLog();return;}
+  if(e.target.getAttribute&&e.target.getAttribute('data-stepchan')){var sk=e.target.getAttribute('data-stepchan');var ch=e.target.value;readRemarks();var cur=state.logTemp[sk]||{};var rest=cur.remark||'';(LOG_CHANNELS||[]).forEach(function(cn){if(rest.indexOf(cn+', ')===0)rest=rest.slice((cn+', ').length);else if(rest===cn)rest='';});var nr=ch?(rest?ch+', '+rest:ch+', '):rest;state.logTemp[sk]=Object.assign({},cur,{channel:ch,remark:nr});renderLog();return;}
   if(e.target.getAttribute&&e.target.getAttribute('data-quickrem')){var qk=e.target.getAttribute('data-quickrem');var qv=e.target.value;if(qv){var inp=document.querySelector('[data-remark="'+qk+'"]');if(inp){inp.value=inp.value?(inp.value+'; '+qv):qv;}e.target.value='';}return;}
   if(e.target.getAttribute&&e.target.getAttribute('data-pgsize')){var pv=e.target.getAttribute('data-pgsize');var pn=parseInt(e.target.value,10);if(pn>0){state.pageSize[pv]=pn;if(pv==='fu')state.fuShowAll=false;state.page[pv]=1;render();}return;}
   if(id==='flt_month'){var ym=e.target.value;state.filters.month=ym;if(ym){var p=ym.split('-');var last=new Date(parseInt(p[0],10),parseInt(p[1],10),0).getDate();state.filters.from=ym+'-01';state.filters.to=ym+'-'+String(last).padStart(2,'0');}else{state.filters.from='';state.filters.to='';}state.page.inq=1;state.page.comp=1;state.page.fu=1;render();return;}
