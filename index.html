@@ -252,6 +252,70 @@
   tr.wonrow td:first-child{box-shadow:inset 3px 0 0 var(--done);}
   table.inqtable{min-width:900px;}
   table.inqtable th{padding:10px 12px;font-size:10px;}
+
+  /* ============ PROFESSIONAL POLISH LAYER (global, cosmetic only) ============ */
+  :root{--line:#E8EBF0;--lineSoft:#F1F3F7;}
+  html,body{background-image:radial-gradient(1100px 460px at 82% -12%,#EEF1F7 0%,rgba(238,241,247,0) 62%),linear-gradient(180deg,#FBFCFE 0%,#F4F6FA 100%);}
+  ::selection{background:rgba(184,134,16,.18);}
+  /* scrollbars */
+  *{scrollbar-width:thin;scrollbar-color:#D2D7E0 transparent;}
+  ::-webkit-scrollbar{width:11px;height:11px;}
+  ::-webkit-scrollbar-thumb{background:#D3D8E1;border-radius:9px;border:3px solid transparent;background-clip:padding-box;}
+  ::-webkit-scrollbar-thumb:hover{background:#BAC1CD;background-clip:padding-box;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  /* buttons */
+  .btn{border-radius:10px;font-weight:600;letter-spacing:.1px;transition:transform .12s ease,box-shadow .16s ease,background .16s ease,border-color .15s ease,color .15s ease;}
+  .btn-primary{background:linear-gradient(180deg,#C6941B 0%,#B88610 100%);box-shadow:0 2px 7px rgba(184,134,16,.26);}
+  .btn-primary:hover{background:linear-gradient(180deg,#BC8A12 0%,#9C700C 100%);box-shadow:0 5px 14px rgba(184,134,16,.32);transform:translateY(-1px);}
+  .btn-ghost{background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(20,28,44,.04);}
+  .btn-ghost:hover{border-color:#C9D0DB;background:#FBFCFE;transform:translateY(-1px);}
+  .icon-btn{border-radius:9px;transition:background .13s,color .13s,transform .1s;}
+  .icon-btn:hover{background:#F0F3F7;color:var(--ink);}
+  .icon-btn:active{transform:scale(.92);}
+  /* inputs */
+  input,select,textarea{border-radius:10px;border-color:#E2E6EC;transition:border-color .15s,box-shadow .15s,background .15s;}
+  input:hover,select:hover,textarea:hover{border-color:#CDD4DE;}
+  input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(184,134,16,.13);}
+  .field-label{letter-spacing:.2px;color:#59616E;}
+  input[type=date],input[type=time]{border-radius:10px;}
+  /* cards */
+  .card{border-radius:14px;border-color:#EAEDF2;box-shadow:0 1px 2px rgba(20,28,44,.035),0 7px 20px rgba(20,28,44,.045);}
+  .setcard{border-radius:14px;border-color:#EAEDF2;box-shadow:0 1px 2px rgba(20,28,44,.035),0 7px 20px rgba(20,28,44,.045);}
+  /* chips / tags */
+  .chip{border-radius:999px;letter-spacing:.15px;font-weight:600;}
+  .tag{border-radius:7px;letter-spacing:.1px;}
+  /* tabbar */
+  .tabbar button{font-size:14px;letter-spacing:.1px;padding-top:15px;padding-bottom:15px;transition:color .14s,border-color .14s;}
+  .tabbar button.on{border-bottom-width:3px;}
+  /* tables */
+  table th{color:#8A93A2;font-weight:700;}
+  thead tr{background:#F7F8FB!important;}
+  thead th{border-bottom:1px solid var(--line);}
+  tr.row{transition:background .12s ease;}
+  tr.row:hover{background:#FAFBFE;}
+  /* filter bar */
+  .filterbar{background:rgba(255,255,255,.92);border-color:#EAEDF2;border-radius:16px;box-shadow:0 1px 2px rgba(20,28,44,.035),0 8px 22px rgba(20,28,44,.05);}
+  .filterbar label{letter-spacing:.5px;color:#8A93A2;}
+  /* segmented + status chips */
+  .seg{border-radius:10px;overflow:hidden;box-shadow:0 1px 2px rgba(20,28,44,.04);}
+  .statuschips button{border-radius:999px;box-shadow:0 1px 2px rgba(20,28,44,.04);}
+  .statuschips button.on{box-shadow:0 3px 10px rgba(37,39,54,.2);}
+  /* modal */
+  .modal{border-radius:18px;box-shadow:0 30px 80px rgba(16,22,34,.34);}
+  .overlay{backdrop-filter:blur(3px);background:rgba(20,28,36,.52);}
+  .mh{padding:18px 22px;}
+  /* dropdowns */
+  .natsel{border-radius:10px;}
+  .dd-btn{border-radius:10px;}
+  .dp-btn,.tp-native{border-radius:10px;}
+  /* home tiles / kpi */
+  .dtile{border-radius:16px;box-shadow:0 2px 10px rgba(20,25,40,.055);}
+  .navcard:hover{box-shadow:0 8px 22px rgba(184,116,30,.14);}
+  /* detail rows */
+  .detail-row{padding:12px 0;}
+  .detail-row .k{color:#8A93A2;}
+  /* sync row */
+  #syncrow{font-weight:500;}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -373,8 +437,8 @@ var PALETTE=['#B8860B','#2C6FB3','#2E7D52','#C0392B','#7A5AA8','#0E9AA7','#D9822
 function colr(i){return PALETTE[i%PALETTE.length];}
 var PERM_KEYS=['dashboard','analysis','crmActivity','cold','coldActivity','coldReport','quotations','quotesList','quotesEdit','quotesPdf','quoteReport','coa','coaEdit','coaPdf','po','poEdit','poPdf','sales','salesEdit','addInquiry','editInquiry','del','export'];
 var AUTH={adminPass:'admin123',mgrPass:'manage123',teamPass:'team123',timeout:10,perms:{
-  mgr:{dashboard:true,analysis:true,crmActivity:true,cold:true,coldActivity:true,coldReport:true,quotations:true,quotesList:true,quotesEdit:true,quotesPdf:true,quoteReport:true,coa:true,coaEdit:true,coaPdf:true,po:true,poEdit:true,poPdf:true,dn:true,dnEdit:true,dnPdf:true,soa:true,soaEdit:true,soaPdf:true,sales:true,salesEdit:true,addInquiry:true,editInquiry:true,del:true,export:true},
-  team:{dashboard:true,analysis:true,crmActivity:false,cold:true,coldActivity:true,coldReport:false,quotations:true,quotesList:true,quotesEdit:false,quotesPdf:false,quoteReport:false,coa:false,coaEdit:false,coaPdf:false,po:false,poEdit:false,poPdf:false,dn:true,dnEdit:true,dnPdf:true,soa:true,soaEdit:true,soaPdf:true,sales:false,salesEdit:false,addInquiry:true,editInquiry:true,del:false,export:false}
+  mgr:{dashboard:true,analysis:true,crmActivity:true,cold:true,coldActivity:true,coldReport:true,quotations:true,quotesList:true,quotesEdit:true,quotesPdf:true,quoteReport:true,coa:true,coaEdit:true,coaPdf:true,po:true,poEdit:true,poPdf:true,dn:true,dnEdit:true,dnPdf:true,soa:true,soaEdit:true,soaPdf:true,emp:true,empEdit:true,empManage:true,sales:true,salesEdit:true,addInquiry:true,editInquiry:true,del:true,export:true},
+  team:{dashboard:true,analysis:true,crmActivity:false,cold:true,coldActivity:true,coldReport:false,quotations:true,quotesList:true,quotesEdit:false,quotesPdf:false,quoteReport:false,coa:false,coaEdit:false,coaPdf:false,po:false,poEdit:false,poPdf:false,dn:true,dnEdit:true,dnPdf:true,soa:true,soaEdit:true,soaPdf:true,emp:true,empEdit:true,empManage:false,sales:false,salesEdit:false,addInquiry:true,editInquiry:true,del:false,export:false}
 }};
 function roleLabel(r){return r==='admin'?'Admin':r==='mgr'?'Management':r==='team'?'Team':'';}
 /* ▼ The 3 Firebase login accounts. These MUST match the emails you created in Firebase → Authentication → Users. Edit if yours differ. ▼ */
@@ -411,8 +475,8 @@ function saveAuthCfg(){ var g=function(id){var e=document.getElementById(id);ret
 }
 var LOG_CHANNELS=['WhatsApp','Call','Email','Physical visit','SMS'];
 var LOG_REMARKS=['No update from client','No response','Client will confirm soon','Asked for revised price','Requirement on hold','Follow up next week','Sent reminder','Spoke to client — positive','Client busy — call later'];
-function applySettings(s){ if(!s)return; if(Array.isArray(s.products)&&s.products.length)PRODUCTS=s.products; if(Array.isArray(s.locations)&&s.locations.length)LOCATIONS=s.locations; if(Array.isArray(s.sources)&&s.sources.length)SOURCES=s.sources; if(Array.isArray(s.schedule)&&s.schedule.length)SCHEDULE=s.schedule; if(s.owner){OWNER=s.owner;} if(s.wonInterval>0)REORDER_DAYS=s.wonInterval; if(s.lostInterval>0)REENGAGE_DAYS=s.lostInterval; if(s.qvat>=0)QVAT=s.qvat; if(Array.isArray(s.qterms)&&s.qterms.length)QUOTE_TERMS=s.qterms; if(Array.isArray(s.qpresets))QUOTE_PRESETS=s.qpresets; if(s.qbank)QUOTE_BANK=s.qbank; if(s.qvatno)QUOTE_VATNO=s.qvatno; if(s.qfrom)QUOTE_FROM=Object.assign({},QUOTE_FROM,s.qfrom); if(Array.isArray(s.coldSchedule)&&s.coldSchedule.length)COLD_SCHEDULE=s.coldSchedule; if(s.coldTargets)COLD_TARGETS=Object.assign({},COLD_TARGETS,s.coldTargets); if(Array.isArray(s.coldRegions)&&s.coldRegions.length)COLD_REGIONS=s.coldRegions; if(s.coldGap>0)COLD_GAP=s.coldGap; if(s.auth){ if(s.auth.adminPass)AUTH.adminPass=s.auth.adminPass; if(s.auth.mgrPass)AUTH.mgrPass=s.auth.mgrPass; if(s.auth.teamPass)AUTH.teamPass=s.auth.teamPass; if(typeof s.auth.timeout==='number'){AUTH.timeout=s.auth.timeout;try{localStorage.setItem('ksaTimeout',String(s.auth.timeout));}catch(e){}} if(s.auth.perms){ if(s.auth.perms.mgr)AUTH.perms.mgr=Object.assign({},AUTH.perms.mgr,s.auth.perms.mgr); if(s.auth.perms.team)AUTH.perms.team=Object.assign({},AUTH.perms.team,s.auth.perms.team); } } if(s.coaSignatory)COA_SIGNATORY=s.coaSignatory; if(s.coaTitle)COA_TITLE=s.coaTitle; if(s.coaStmt)COA_STMT=s.coaStmt; if(Array.isArray(s.poTerms)&&s.poTerms.length)PO_TERMS=s.poTerms; if(s.poVat>=0)PO_VAT=s.poVat; if(s.poDelivery!=null)PO_DELIVERY=s.poDelivery; if(Array.isArray(s.logChannels)&&s.logChannels.length)LOG_CHANNELS=s.logChannels; if(Array.isArray(s.logRemarks)&&s.logRemarks.length)LOG_REMARKS=s.logRemarks; if(s.companyStamp!=null)COMPANY_STAMP=s.companyStamp; if(s.companySign!=null)COMPANY_SIGN=s.companySign; applyDnSettings(s); }
-function currentSettings(){ return {products:PRODUCTS,locations:LOCATIONS,sources:SOURCES,schedule:SCHEDULE,owner:OWNER,wonInterval:REORDER_DAYS,lostInterval:REENGAGE_DAYS,qvat:QVAT,qterms:QUOTE_TERMS,qpresets:QUOTE_PRESETS,qbank:QUOTE_BANK,qvatno:QUOTE_VATNO,qfrom:QUOTE_FROM,coldSchedule:COLD_SCHEDULE,coldTargets:COLD_TARGETS,coldRegions:COLD_REGIONS,coldGap:COLD_GAP,auth:AUTH,coaSignatory:COA_SIGNATORY,coaTitle:COA_TITLE,coaStmt:COA_STMT,poTerms:PO_TERMS,poVat:PO_VAT,poDelivery:PO_DELIVERY,logChannels:LOG_CHANNELS,logRemarks:LOG_REMARKS,companyStamp:COMPANY_STAMP,companySign:COMPANY_SIGN,dnTemplate:DN_TMPL}; }
+function applySettings(s){ if(!s)return; if(Array.isArray(s.products)&&s.products.length)PRODUCTS=s.products; if(Array.isArray(s.locations)&&s.locations.length)LOCATIONS=s.locations; if(Array.isArray(s.sources)&&s.sources.length)SOURCES=s.sources; if(Array.isArray(s.schedule)&&s.schedule.length)SCHEDULE=s.schedule; if(s.owner){OWNER=s.owner;} if(s.wonInterval>0)REORDER_DAYS=s.wonInterval; if(s.lostInterval>0)REENGAGE_DAYS=s.lostInterval; if(s.qvat>=0)QVAT=s.qvat; if(Array.isArray(s.qterms)&&s.qterms.length)QUOTE_TERMS=s.qterms; if(Array.isArray(s.qpresets))QUOTE_PRESETS=s.qpresets; if(s.qbank)QUOTE_BANK=s.qbank; if(s.qvatno)QUOTE_VATNO=s.qvatno; if(s.qfrom)QUOTE_FROM=Object.assign({},QUOTE_FROM,s.qfrom); if(Array.isArray(s.coldSchedule)&&s.coldSchedule.length)COLD_SCHEDULE=s.coldSchedule; if(s.coldTargets)COLD_TARGETS=Object.assign({},COLD_TARGETS,s.coldTargets); if(Array.isArray(s.coldRegions)&&s.coldRegions.length)COLD_REGIONS=s.coldRegions; if(s.coldGap>0)COLD_GAP=s.coldGap; if(s.auth){ if(s.auth.adminPass)AUTH.adminPass=s.auth.adminPass; if(s.auth.mgrPass)AUTH.mgrPass=s.auth.mgrPass; if(s.auth.teamPass)AUTH.teamPass=s.auth.teamPass; if(typeof s.auth.timeout==='number'){AUTH.timeout=s.auth.timeout;try{localStorage.setItem('ksaTimeout',String(s.auth.timeout));}catch(e){}} if(s.auth.perms){ if(s.auth.perms.mgr)AUTH.perms.mgr=Object.assign({},AUTH.perms.mgr,s.auth.perms.mgr); if(s.auth.perms.team)AUTH.perms.team=Object.assign({},AUTH.perms.team,s.auth.perms.team); } } if(s.coaSignatory)COA_SIGNATORY=s.coaSignatory; if(s.coaTitle)COA_TITLE=s.coaTitle; if(s.coaStmt)COA_STMT=s.coaStmt; if(Array.isArray(s.poTerms)&&s.poTerms.length)PO_TERMS=s.poTerms; if(s.poVat>=0)PO_VAT=s.poVat; if(s.poDelivery!=null)PO_DELIVERY=s.poDelivery; if(Array.isArray(s.logChannels)&&s.logChannels.length)LOG_CHANNELS=s.logChannels; if(Array.isArray(s.logRemarks)&&s.logRemarks.length)LOG_REMARKS=s.logRemarks; if(s.companyStamp!=null)COMPANY_STAMP=s.companyStamp; if(s.companySign!=null)COMPANY_SIGN=s.companySign; applyDnSettings(s); applyEmpSettings(s); }
+function currentSettings(){ return {products:PRODUCTS,locations:LOCATIONS,sources:SOURCES,schedule:SCHEDULE,owner:OWNER,wonInterval:REORDER_DAYS,lostInterval:REENGAGE_DAYS,qvat:QVAT,qterms:QUOTE_TERMS,qpresets:QUOTE_PRESETS,qbank:QUOTE_BANK,qvatno:QUOTE_VATNO,qfrom:QUOTE_FROM,coldSchedule:COLD_SCHEDULE,coldTargets:COLD_TARGETS,coldRegions:COLD_REGIONS,coldGap:COLD_GAP,auth:AUTH,coaSignatory:COA_SIGNATORY,coaTitle:COA_TITLE,coaStmt:COA_STMT,poTerms:PO_TERMS,poVat:PO_VAT,poDelivery:PO_DELIVERY,logChannels:LOG_CHANNELS,logRemarks:LOG_REMARKS,companyStamp:COMPANY_STAMP,companySign:COMPANY_SIGN,dnTemplate:DN_TMPL,empTargets:EMP_TARGETS,empTargetMode:EMP_TARGET_MODE,empMetrics:EMP_METRICS}; }
 function reorderNext(c){ if(!c.reorder||!c.reorder.from)return null; return addDays(c.reorder.last||c.reorder.from,REORDER_DAYS); }
 function reengageNext(c){ if(!c.reengage||!c.reengage.from)return null; return addDays(c.reengage.last||c.reengage.from,REENGAGE_DAYS); }
 var LOCATIONS=['Dammam','Khobar','Jubail','Riyadh','Jeddah','Yanbu','Qatar','Bahrain','Kuwait'];
@@ -437,18 +501,18 @@ function dueDate(c,step){var r=c.followups&&c.followups[step.k];if(r&&r.date)ret
 
 /* ---------- backend bridge: Firebase (Realtime Database) ---------- */
 var LIVE=false;
-async function apiGet(){ if(window.KSA_DB){ try{ return await window.KSA_DB.getAll(); }catch(e){ return {clients:[],activity:[],settings:null,quotes:[],prospects:[],coas:[],pos:[],sales:[],reminders:[],dns:[],dnCompanies:[],soas:[]}; } } return {clients:state.clients,activity:state.activity,settings:currentSettings(),quotes:state.quotes,prospects:state.prospects,coas:state.coas,pos:state.pos,sales:state.sales,reminders:state.reminders,dns:state.dns,dnCompanies:state.dnCompanies,soas:state.soas}; }
+async function apiGet(){ if(window.KSA_DB){ try{ return await window.KSA_DB.getAll(); }catch(e){ return {clients:[],activity:[],settings:null,quotes:[],prospects:[],coas:[],pos:[],sales:[],reminders:[],dns:[],dnCompanies:[],soas:[],employees:[],empReports:[]}; } } return {clients:state.clients,activity:state.activity,settings:currentSettings(),quotes:state.quotes,prospects:state.prospects,coas:state.coas,pos:state.pos,sales:state.sales,reminders:state.reminders,dns:state.dns,dnCompanies:state.dnCompanies,soas:state.soas,employees:state.employees,empReports:state.empReports}; }
 async function apiSaveAll(){
   if(!Array.isArray(state.clients)||!Array.isArray(state.prospects)||!Array.isArray(state.quotes)){console.error('Save blocked: data not in expected form.');return false;}
   if(!Array.isArray(state.coas))state.coas=[]; if(!Array.isArray(state.pos))state.pos=[]; if(!Array.isArray(state.sales))state.sales=[];
   var bad=state.clients.some(function(c){return c&&(Array.isArray(c.clients)||Array.isArray(c.prospects)||Array.isArray(c.quotes));});
   if(bad){console.error('Save blocked: nested-board structure detected.');setSync('Save paused — please reload the page.');return false;}
-  if(window.KSA_DB){ try{ try{ var remote=await window.KSA_DB.getAll(); if(remote&&Array.isArray(remote.clients)){ state.clients=mergeClients(state.clients,remote.clients); } }catch(me){} await window.KSA_DB.saveAll(state.clients,state.activity,currentSettings(),state.quotes,state.prospects,state.coas,state.pos,state.sales,state.reminders,state.dns,state.dnCompanies,state.soas); return true; }catch(e){ return false; } } return true; }
+  if(window.KSA_DB){ try{ try{ var remote=await window.KSA_DB.getAll(); if(remote&&Array.isArray(remote.clients)){ state.clients=mergeClients(state.clients,remote.clients); } }catch(me){} await window.KSA_DB.saveAll(state.clients,state.activity,currentSettings(),state.quotes,state.prospects,state.coas,state.pos,state.sales,state.reminders,state.dns,state.dnCompanies,state.soas,state.employees,state.empReports); return true; }catch(e){ return false; } } return true; }
 async function apiSave(c){ return await apiSaveAll(); }
 async function apiDel(id){ return await apiSaveAll(); }
 
 /* ---------- state ---------- */
-var state={clients:[],activity:[],quotes:[],prospects:[],coas:[],pos:[],sales:[],reminders:[],dns:[],dnCompanies:[],soas:[],soaTab:'list',editingSoa:null,soaF:{search:''},dnTab:'dashboard',editingDn:null,editingDnCompany:null,dnF:{search:'',status:'all'},dnMonth:'',dnCompF:'',dnStatusDraft:null,poTab:'list',editingPo:null,poF:{search:''},salesTab:'overview',editingSale:null,salesF:{month:'',product:'All',search:''},saleDetail:null,saleRange:3,area:'crm',qtab:'list',ctab:'list',coaTab:'list',editingCoa:null,editingQuote:null,editingProspect:null,logDraft:null,importData:null,coldF:{status:'All',region:'All',search:'',from:'',to:'',dateField:'lastActivityDate',channel:'All'},coldRepF:{from:'',to:''},contactFor:null,contactDraft:null,qSearch:'',me:OWNER,tab:'dashboard',search:'',modalOpen:false,editId:null,logId:null,logTemp:null,
+var state={clients:[],activity:[],quotes:[],prospects:[],coas:[],pos:[],sales:[],reminders:[],dns:[],dnCompanies:[],soas:[],soaTab:'list',editingSoa:null,soaF:{search:''},employees:[],empReports:[],empTab:'dashboard',editingEmpReport:null,editingEmployee:null,empF:{month:'',empId:'All',search:''},dnTab:'dashboard',editingDn:null,editingDnCompany:null,dnF:{search:'',status:'all'},dnMonth:'',dnCompF:'',dnStatusDraft:null,poTab:'list',editingPo:null,poF:{search:''},salesTab:'overview',editingSale:null,salesF:{month:'',product:'All',search:''},saleDetail:null,saleRange:3,area:'crm',qtab:'list',ctab:'list',coaTab:'list',editingCoa:null,editingQuote:null,editingProspect:null,logDraft:null,importData:null,coldF:{status:'All',region:'All',search:'',from:'',to:'',dateField:'lastActivityDate',channel:'All'},coldRepF:{from:'',to:''},contactFor:null,contactDraft:null,qSearch:'',me:OWNER,tab:'dashboard',search:'',modalOpen:false,editId:null,logId:null,logTemp:null,
   formProducts:[],formQuote:'No',formResp:'No',
   inqSub:'all',inqStatus:'all',fuFilter:'all',fuTab:'active',
   filters:{from:'',to:'',product:'All',location:'All',month:''},
@@ -586,13 +650,14 @@ function seed(){var t=today();return[
 /* ============================================================ RENDER ============================================================ */
 function updateHeader(){
   var sw=document.getElementById('areaswitch');
-  var areas=[['crm','CRM']]; if(can('quotations'))areas.push(['quotes','Quotations']); if(can('coa'))areas.push(['coa','COA']); if(can('po'))areas.push(['po','Purchase Orders']); if(can('dn'))areas.push(['dn','Delivery Notes']); if(can('soa'))areas.push(['soa','SOA']); if(can('sales'))areas.push(['sales','Sales Forecast']);
+  var areas=[['crm','CRM']]; if(can('quotations'))areas.push(['quotes','Quotations']); if(can('coa'))areas.push(['coa','COA']); if(can('po'))areas.push(['po','Purchase Orders']); if(can('dn'))areas.push(['dn','Delivery Notes']); if(can('soa'))areas.push(['soa','SOA']); if(can('emp'))areas.push(['emp','Employee Report']); if(can('sales'))areas.push(['sales','Sales Forecast']);
   if(sw)sw.innerHTML='<button data-home class="areabtn'+(state.area==='home'?' on':'')+'" title="Menu" style="padding:8px 10px;">'+ic('grid',15)+'</button>'+areas.map(function(a){return '<button data-area="'+a[0]+'" class="areabtn'+(state.area===a[0]?' on':'')+'">'+a[1]+'</button>';}).join('');
   var lo=document.getElementById('btnLogout'); if(lo){ if(state.role){lo.style.display='';lo.innerHTML=ic('users',14)+' '+roleLabel(state.role)+' · Log out';} else lo.style.display='none'; }
   var add=document.getElementById('btnAdd'),exp=document.getElementById('btnExport');
   if(state.area==='home'){ if(add)add.style.display='none'; if(exp)exp.style.display='none'; }
   else if(state.area==='dn'){ if(add){if(can('dnEdit')){add.style.display='';add.innerHTML=ic('plus',15)+' New DN';add.onclick=function(){openDn(null);};}else add.style.display='none';} if(exp)exp.style.display='none'; }
   else if(state.area==='soa'){ if(add){if(can('soaEdit')){add.style.display='';add.innerHTML=ic('plus',15)+' New statement';add.onclick=function(){openSoa(null);};}else add.style.display='none';} if(exp)exp.style.display='none'; }
+  else if(state.area==='emp'){ if(add){if(can('empEdit')){add.style.display='';add.innerHTML=ic('plus',15)+' Add report';add.onclick=function(){openEmpReport(null);};}else add.style.display='none';} if(exp)exp.style.display='none'; }
   else if(state.area==='coa'){ if(add){if(can('coaEdit')){add.style.display='';add.innerHTML=ic('plus',15)+' New COA';add.onclick=function(){openCOA(null);};}else add.style.display='none';} if(exp)exp.style.display='none'; }
   else if(state.area==='po'){ if(add){if(can('poEdit')){add.style.display='';add.innerHTML=ic('plus',15)+' New PO';add.onclick=function(){openPO(null);};}else add.style.display='none';} if(exp)exp.style.display='none'; }
   else if(state.area==='sales'){ if(add){if(can('salesEdit')){add.style.display='';add.innerHTML=ic('plus',15)+' Add forecast';add.onclick=function(){openSale(null);};}else add.style.display='none';} if(exp)exp.style.display='none'; }
@@ -629,6 +694,9 @@ function render(){
   }
   if(state.area==='soa'){
     _renderSoa(v);return;
+  }
+  if(state.area==='emp'){
+    _renderEmp(v);return;
   }
   if(state.area==='coa'){
     _renderCoa(v);return;
@@ -680,6 +748,7 @@ function viewHome(){
   if(can('po'))tiles.push({go:'po',ic:'cart',label:'Purchase Orders',desc:(state.pos||[]).length+' POs',g1:'#A78BFA',g2:'#7C3AED'});
   if(can('dn'))tiles.push({go:'dn',ic:'box',label:'Delivery Notes',desc:(state.dns||[]).length+' DNs',g1:'#F59E0B',g2:'#B45309'});
   if(can('soa'))tiles.push({go:'soa',ic:'doc',label:'Statement of Account',desc:(state.soas||[]).length+' statements',g1:'#38BDF8',g2:'#0369A1'});
+  if(can('emp'))tiles.push({go:'emp',ic:'users',label:'Employee Report',desc:(state.empReports||[]).length+' daily reports',g1:'#34D399',g2:'#047857'});
   if(can('sales'))tiles.push({go:'sales',ic:'trend',label:'Sales Forecast',desc:'This month '+money(salesMonth),g1:'#2DD4BF',g2:'#0D9488'});
   if(state.role==='admin')tiles.push({go:'settings',ic:'gear',label:'Settings',desc:'Users, password & access',g1:'#94A3B8',g2:'#52607A'});
   var cards=tiles.map(function(t){return '<button class="hometile" data-go="'+t.go+'" style="all:unset;cursor:pointer;box-sizing:border-box;display:flex;flex-direction:column;gap:15px;width:214px;padding:22px;border-radius:20px;background:#fff;border:1px solid var(--lineSoft);box-shadow:0 4px 16px rgba(20,25,40,.06);">'
@@ -1202,6 +1271,7 @@ function viewSettings(){
     ['Purchase Orders',[['po','Open POs'],['poEdit','Create / edit'],['poPdf','Download PDF']]],
     ['Delivery Notes',[['dn','Open Delivery Notes'],['dnEdit','Create / edit / import'],['dnPdf','Download PDF']]],
     ['Statements (SOA)',[['soa','Open Statements'],['soaEdit','Create / edit'],['soaPdf','Download PDF']]],
+    ['Employee Report',[['emp','Open Employee Report'],['empEdit','Add / edit daily reports'],['empManage','Manage employees & targets']]],
     ['Sales Forecast',[['sales','Open Sales Forecast'],['salesEdit','Add / edit forecasts & targets']]]];
   function roleCol(role,pm){var html='';GROUPS.forEach(function(g){html+='<div style="margin-top:12px;"><div style="font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">'+g[0]+'</div>';g[1].forEach(function(row){html+='<label style="display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--ink2);padding:5px 0;"><input type="checkbox" id="perm_'+role+'_'+row[0]+'" '+(pm[row[0]]?'checked':'')+' style="width:15px;height:15px;flex-shrink:0;"/> '+row[1]+'</label>';});html+='</div>';});return html;}
   var access='<div class="setcard"><h3><span class="sq"></span>User access &amp; login</h3><div class="desc">Three passwords, three roles. <b>Admin</b> always has full access (including this panel). Set what <b>Management</b> and <b>Team</b> can do. Changes apply next time they sign in.</div>'
@@ -2937,6 +3007,260 @@ function soaHTML(s){
     +'</body></html>';
 }
 
+/* ============================================================ EMPLOYEE DAILY REPORT ============================================================ */
+var EMP_METRICS=[
+ {k:'followups',label:'Follow-ups'},
+ {k:'quotations',label:'Quotations made'},
+ {k:'soas',label:'SOAs made'},
+ {k:'invoices',label:'Invoices (finance)'},
+ {k:'coas',label:'COAs made'},
+ {k:'coldMail',label:'Cold mailing'},
+ {k:'coldMsg',label:'Cold messaging'},
+ {k:'inquiriesClosed',label:'Inquiries closed'}
+];
+var EMP_TARGETS={followups:10,quotations:3,soas:1,invoices:2,coas:1,coldMail:20,coldMsg:20,inquiriesClosed:1,workingHours:8,revenue:5000};
+var EMP_TARGET_MODE='daily'; /* 'daily' | 'monthly' */
+function applyEmpSettings(s){ if(s&&s.empTargets)EMP_TARGETS=Object.assign({},EMP_TARGETS,s.empTargets); if(s&&s.empTargetMode)EMP_TARGET_MODE=s.empTargetMode; if(s&&Array.isArray(s.empMetrics)&&s.empMetrics.length)EMP_METRICS=s.empMetrics.filter(function(m){return m&&m.k&&m.label;}); }
+function empShort(label){return (label||'').split(/[^A-Za-z0-9]+/).filter(Boolean).map(function(w){return w.charAt(0).toUpperCase();}).join('').slice(0,3)||'?';}
+function empSlugKey(label){var parts=(label||'').trim().toLowerCase().replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(Boolean);var base=parts.map(function(w,i){return i?w.charAt(0).toUpperCase()+w.slice(1):w;}).join('')||'metric';var used={};EMP_METRICS.forEach(function(m){used[m.k]=1;});['revenue','workingHours','date','empId','empName','productivity','remarks','otherActivity','id','auto'].forEach(function(k){used[k]=1;});var k=base,i=2;while(used[k]){k=base+i;i++;}return k;}
+function readEmpTargetsDOM(){EMP_METRICS.concat([{k:'revenue'},{k:'workingHours'}]).forEach(function(m){var e=document.getElementById('etg_'+m.k);if(e)EMP_TARGETS[m.k]=Number(e.value)||0;});}
+function addEmpMetric(){readEmpTargetsDOM();var e=document.getElementById('emp_newmetric');var label=e?e.value.trim():'';if(!label){toast('Type a column name.');return;}var k=empSlugKey(label);EMP_METRICS=EMP_METRICS.concat([{k:k,label:label}]);if(EMP_TARGETS[k]==null)EMP_TARGETS[k]=0;toast('Column added');apiSaveAll();render();}
+function removeEmpMetric(k){if(!confirm('Remove this column? Existing report numbers stay saved but are hidden.'))return;readEmpTargetsDOM();EMP_METRICS=EMP_METRICS.filter(function(m){return m.k!==k;});toast('Column removed');apiSaveAll();render();}
+function workingDaysInMonth(ym){ym=ym||ymNow();var p=(ym||'').split('-');var y=+p[0],mo=+p[1];if(!y||!mo)return 26;var days=new Date(y,mo,0).getDate();var wd=0;for(var d=1;d<=days;d++){if(new Date(y,mo-1,d).getDay()!==5)wd++;}return wd;}
+function empDailyTarget(k,dateStr){var t=Number(EMP_TARGETS[k])||0;if(EMP_TARGET_MODE==='monthly'){var wd=workingDaysInMonth((dateStr||today()).slice(0,7))||26;return t/wd;}return t;}
+function fmtTgt(v){v=Number(v)||0;return (Math.round(v)===v)?String(v):v.toFixed(1);}
+function empProductivity(r){var keys=EMP_METRICS.map(function(m){return m.k;}).concat(['workingHours','revenue']);var sum=0,n=0;keys.forEach(function(k){var t=empDailyTarget(k,r.date);if(t>0){var a=Number(r[k])||0;sum+=Math.min(a/t,1);n++;}});return n?Math.round(sum/n*100):0;}
+function empColor(p){return p>=75?'var(--done)':p>=50?'var(--accent)':'var(--overdue)';}
+function empFind(id){return (state.empReports||[]).find(function(x){return x.id===id;});}
+function employeeFind(id){return (state.employees||[]).find(function(x){return x.id===id;});}
+function newEmployee(){return {id:uid(),name:'',role:'Sales Representative',active:true};}
+function newEmpReport(){var me=(state.employees||[])[0];return {id:uid(),empId:(me&&me.id)||'',empName:(me&&me.name)||'',date:today(),followups:0,quotations:0,soas:0,invoices:0,coas:0,coldMail:0,coldMsg:0,inquiriesClosed:0,revenue:0,workingHours:0,otherActivity:'',productivity:0,auto:true,remarks:'',createdTs:Date.now(),by:(state.me||OWNER)};}
+
+/* ---------- employees ---------- */
+function openEmployee(id){ if(!can('empManage')){toast('No permission to manage employees.');return;} state.modalOpen=true;state.editingEmployee=id?JSON.parse(JSON.stringify(employeeFind(id))):newEmployee();var c=state.editingEmployee;var ex=!!id;
+  document.getElementById('overlay').innerHTML='<div class="overlay" data-close="1"><div class="modal" data-stop="1" style="max-width:440px;"><div class="mh"><span class="mt">'+(ex?'Edit':'New')+' employee</span><button class="icon-btn" data-close="1">'+ic('x',17)+'</button></div><div style="padding:20px 22px;display:grid;gap:12px;">'
+    +'<div><label class="field-label">Name</label><input id="emp_name" value="'+esc(c.name)+'"/></div>'
+    +'<div><label class="field-label">Role</label><input id="emp_role" value="'+esc(c.role||'')+'" placeholder="Sales Representative"/></div>'
+    +'<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);"><input type="checkbox" id="emp_active" '+(c.active!==false?'checked':'')+'/> Active</label>'
+    +'</div><div style="padding:14px 22px;border-top:1px solid var(--lineSoft);display:flex;justify-content:'+(ex?'space-between':'flex-end')+';gap:10px;">'+(ex?'<button class="btn btn-ghost" data-empdel="'+c.id+'" style="color:var(--overdue);border-color:var(--overdue);">Delete</button>':'')+'<div style="display:flex;gap:10px;"><button class="btn btn-ghost" data-close="1">Cancel</button><button class="btn btn-primary" data-empsave="1">Save</button></div></div></div></div>';
+  enhanceAll(document.getElementById('overlay'));
+}
+function saveEmployee(){var c=state.editingEmployee;var g=function(id){var e=document.getElementById(id);return e?e.value:'';};var ck=function(id){var e=document.getElementById(id);return !!(e&&e.checked);};c.name=g('emp_name').trim();c.role=g('emp_role');c.active=ck('emp_active');if(!c.name){alert('Enter employee name.');return;}var ex=employeeFind(c.id);if(ex)state.employees=state.employees.map(function(x){return x.id===c.id?c:x;});else state.employees=(state.employees||[]).concat([c]);state.editingEmployee=null;closeModal();apiSaveAll();toast('Saved');}
+function delEmployee(id){if(!confirm('Delete this employee? Their reports stay.'))return;state.employees=state.employees.filter(function(x){return x.id!==id;});state.editingEmployee=null;closeModal();apiSaveAll();}
+
+/* ---------- daily report ---------- */
+function openEmpReport(id){ if(!can('empEdit')){toast('No permission to add reports.');return;} if(!id&&!(state.employees||[]).length){toast('Add an employee first (Employees tab).');state.empTab='employees';render();return;} state.modalOpen=true;state.editingEmpReport=id?JSON.parse(JSON.stringify(empFind(id))):newEmpReport();renderEmpReport();}
+function readEmpReportForm(){var r=state.editingEmpReport;if(!r)return;var g=function(id){var e=document.getElementById(id);return e?e.value:'';};var num=function(id){return Number(g(id))||0;};
+  var es=document.getElementById('er_emp');if(es){r.empId=es.value;var em=employeeFind(r.empId);r.empName=em?em.name:r.empName;}
+  r.date=g('er_date')||r.date;
+  EMP_METRICS.forEach(function(m){r[m.k]=num('er_'+m.k);});
+  r.revenue=num('er_revenue');r.workingHours=num('er_workingHours');r.otherActivity=g('er_otherActivity');r.remarks=g('er_remarks');
+  var auto=document.getElementById('er_prod_auto');r.auto=auto?auto.checked:true;
+  r.productivity=r.auto?empProductivity(r):(num('er_productivity'));
+}
+function empRecalcLive(){var r=state.editingEmpReport;if(!r)return;var g=function(id){var e=document.getElementById(id);return Number(e&&e.value||0);};var tmp={date:(state.editingEmpReport&&state.editingEmpReport.date)||today()};EMP_METRICS.forEach(function(m){tmp[m.k]=g('er_'+m.k);});tmp.workingHours=g('er_workingHours');tmp.revenue=g('er_revenue');var p=empProductivity(tmp);var pe=document.getElementById('er_prod_display');if(pe)pe.textContent=p+'%';var bar=document.getElementById('er_prod_bar');if(bar){bar.style.width=Math.min(100,p)+'%';bar.style.background=empColor(p);}var auto=document.getElementById('er_prod_auto');var inp=document.getElementById('er_productivity');if(inp&&(!auto||auto.checked))inp.value=p;}
+function renderEmpReport(){
+  var r=state.editingEmpReport;var ex=empFind(r.id);
+  var empOpts=(state.employees||[]).filter(function(e){return e.active!==false||e.id===r.empId;}).map(function(e){return '<option value="'+e.id+'"'+(r.empId===e.id?' selected':'')+'>'+esc(e.name)+'</option>';}).join('');
+  var metricInputs=EMP_METRICS.map(function(m){return '<div><label class="field-label">'+esc(m.label)+' <span style="color:var(--muted);font-weight:400;">/ '+fmtTgt(empDailyTarget(m.k,r.date))+'</span></label><input type="number" min="0" id="er_'+m.k+'" value="'+esc(r[m.k]||0)+'"/></div>';}).join('');
+  var p=empProductivity(r);
+  var body='<div style="padding:22px 26px;max-height:72vh;overflow:auto;">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">'
+    +'<div><label class="field-label">Employee</label><select id="er_emp" class="fancy">'+(empOpts||'<option value="">— no employees —</option>')+'</select></div>'
+    +'<div><label class="field-label">Date</label><input type="date" id="er_date" value="'+esc(r.date)+'"/></div>'
+    +'</div>'
+    +'<div class="formsec"><span class="sq"></span>Daily activity</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;">'+metricInputs+'</div>'
+    +'<div class="formsec"><span class="sq"></span>Revenue, hours &amp; other</div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">'
+    +'<div><label class="field-label">Revenue added (SAR) <span style="color:var(--muted);font-weight:400;">/ '+fmtTgt(empDailyTarget('revenue',r.date))+'</span></label><input type="number" min="0" step="0.01" id="er_revenue" value="'+esc(r.revenue||0)+'"/></div>'
+    +'<div><label class="field-label">Total working hours <span style="color:var(--muted);font-weight:400;">/ '+fmtTgt(empDailyTarget('workingHours',r.date))+'</span></label><input type="number" min="0" step="0.5" id="er_workingHours" value="'+esc(r.workingHours||0)+'"/></div>'
+    +'<div><label class="field-label">Other activity</label><input id="er_otherActivity" value="'+esc(r.otherActivity||'')+'" placeholder="Meetings, visits…"/></div>'
+    +'</div>'
+    +'<div class="formsec"><span class="sq"></span>Productivity</div>'
+    +'<div style="background:#F8F9FB;border:1px solid var(--line);border-radius:12px;padding:14px 16px;">'
+      +'<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;"><div style="font-size:30px;font-weight:800;color:'+empColor(p)+';min-width:84px;" id="er_prod_display">'+p+'%</div>'
+      +'<div style="flex:1;min-width:160px;"><div style="height:12px;background:var(--lineSoft);border-radius:8px;overflow:hidden;"><i id="er_prod_bar" style="display:block;height:100%;width:'+Math.min(100,p)+'%;background:'+empColor(p)+';border-radius:8px;transition:width .2s;"></i></div><div style="font-size:11px;color:var(--muted);margin-top:5px;">Auto · average achievement vs '+(EMP_TARGET_MODE==='monthly'?('daily share of monthly targets ('+workingDaysInMonth((r.date||today()).slice(0,7))+' working days)'):'daily targets')+'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:10px;"><label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2);"><input type="checkbox" id="er_prod_auto" '+(r.auto!==false?'checked':'')+'/> Auto</label><input type="number" min="0" max="100" id="er_productivity" value="'+esc(r.auto!==false?p:(r.productivity||0))+'" style="width:74px;text-align:center;"/></div>'
+      +'</div></div>'
+    +'<div class="formsec"><span class="sq"></span>Remarks</div>'
+    +'<textarea id="er_remarks" rows="3" placeholder="Notes on the day — wins, blockers, plan for tomorrow…">'+esc(r.remarks||'')+'</textarea>'
+    +'</div>';
+  document.getElementById('overlay').innerHTML='<div class="overlay" data-close="1"><div class="modal" data-stop="1" style="max-width:820px;"><div class="mh"><span class="mt">'+(ex?'Edit':'Add')+' daily report</span><button class="icon-btn" data-close="1">'+ic('x',17)+'</button></div>'+body+'<div style="padding:14px 26px;border-top:1px solid var(--lineSoft);display:flex;justify-content:'+(ex?'space-between':'flex-end')+';gap:10px;">'+(ex?'<button class="btn btn-ghost" data-erdel="'+r.id+'" style="color:var(--overdue);border-color:var(--overdue);">Delete</button>':'')+'<div style="display:flex;gap:10px;"><button class="btn btn-ghost" data-close="1">Cancel</button><button class="btn btn-primary" data-ersave="1">'+ic('check',15)+' Save report</button></div></div></div></div>';
+  enhanceAll(document.getElementById('overlay'));
+}
+function saveEmpReport(){readEmpReportForm();var r=state.editingEmpReport;if(!r)return;if(!r.empId){alert('Pick the employee.');return;}r.updatedTs=Date.now();var ex=empFind(r.id);if(ex)state.empReports=state.empReports.map(function(x){return x.id===r.id?r:x;});else state.empReports=(state.empReports||[]).concat([r]);pushActivity(ex?'Edited daily report':'Added daily report',r.empName,humanDay(r.date)+' · '+r.productivity+'%',null,null);state.editingEmpReport=null;closeModal();apiSaveAll();toast('Report saved \u2713');}
+function delEmpReport(id){var r=empFind(id);if(!confirm('Delete this daily report?'))return;state.empReports=state.empReports.filter(function(x){return x.id!==id;});state.editingEmpReport=null;if(state.modalOpen)closeModal();else render();apiSaveAll();}
+
+/* ---------- filters ---------- */
+function empMonthList(){var s={};(state.empReports||[]).forEach(function(r){var ym=(r.date||'').slice(0,7);if(ym)s[ym]=1;});s[ymNow()]=1;return Object.keys(s).sort().reverse();}
+function empMonthSel(id){var sel=state.empF.month||'';return '<select id="'+id+'" class="fancy"><option value="">All months</option>'+empMonthList().map(function(ym){return '<option value="'+ym+'"'+(sel===ym?' selected':'')+'>'+ymLabel(ym)+'</option>';}).join('')+'</select>';}
+function empSel(id){var sel=state.empF.empId||'All';return '<select id="'+id+'" class="fancy"><option value="All">All employees</option>'+(state.employees||[]).map(function(e){return '<option value="'+e.id+'"'+(sel===e.id?' selected':'')+'>'+esc(e.name)+'</option>';}).join('')+'</select>';}
+function empScope(){return (state.empReports||[]).filter(function(r){if(state.empF.month&&(r.date||'').slice(0,7)!==state.empF.month)return false;if(state.empF.empId&&state.empF.empId!=='All'&&r.empId!==state.empF.empId)return false;return true;});}
+
+/* ---------- reports list ---------- */
+function viewEmpReports(){
+  var q=(state.empF.search||'').trim().toLowerCase();
+  var list=empScope().filter(function(r){return !q||((r.empName||'')+' '+(r.remarks||'')+' '+(r.otherActivity||'')).toLowerCase().indexOf(q)>=0;}).sort(function(a,b){return (b.date+(b.createdTs||''))<(a.date+(a.createdTs||''))?-1:1;});
+  var head='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin:2px 0 12px;"><div><div style="font-weight:700;font-size:18px;letter-spacing:-.3px;">Daily Reports</div><div style="font-size:12.5px;color:var(--muted);margin-top:2px;">'+list.length+' report'+(list.length===1?'':'s')+'</div></div>'+(can('empEdit')?'<button class="btn btn-primary" data-ernew="1">'+ic('plus',15)+' Add report</button>':'')+'</div>';
+  var bar='<div class="filterbar"><div class="fld"><label>Month</label>'+empMonthSel('emp_month')+'</div><div class="fld"><label>Employee</label>'+empSel('emp_emp')+'</div><div class="fld" style="flex:1;"><label>Search</label><input id="emp_search" value="'+esc(state.empF.search||'')+'" placeholder="Name, remarks…"/></div></div>';
+  if(!(state.empReports||[]).length)return head+bar+'<div class="card" style="padding:30px;text-align:center;color:var(--muted);font-size:13.5px;">No reports yet.'+(can('empEdit')?' Add employees in the <b>Employees</b> tab, then click <b>Add report</b>.':'')+'</div>';
+  var rows=list.map(function(r){return '<tr class="row" style="border-top:1px solid var(--lineSoft);"><td style="padding:11px 12px;font-size:11.5px;color:var(--muted);white-space:nowrap;">'+human(r.date)+'</td>'
+    +'<td style="padding:11px 12px;font-weight:600;font-size:12.5px;">'+esc(r.empName||'—')+'</td>'
+    +'<td style="padding:11px 12px;font-size:11.5px;color:var(--ink2);">'+EMP_METRICS.map(function(m){return '<span title="'+esc(m.label)+'">'+empShort(m.label)+' '+(Number(r[m.k])||0)+'</span>';}).join(' · ')+'</td>'
+    +'<td style="padding:11px 12px;font-size:12px;font-weight:700;white-space:nowrap;">'+money(r.revenue||0)+'</td>'
+    +'<td style="padding:11px 12px;font-size:11.5px;color:var(--ink2);">'+(r.workingHours||0)+'h</td>'
+    +'<td style="padding:11px 12px;"><div style="display:flex;align-items:center;gap:8px;"><div style="width:60px;height:7px;background:var(--lineSoft);border-radius:6px;overflow:hidden;"><i style="display:block;height:100%;width:'+Math.min(100,r.productivity||0)+'%;background:'+empColor(r.productivity||0)+';"></i></div><b style="color:'+empColor(r.productivity||0)+';font-size:12.5px;">'+(r.productivity||0)+'%</b></div></td>'
+    +'<td style="padding:11px 12px;text-align:right;white-space:nowrap;"><button class="icon-btn" data-erview="'+r.id+'" title="View report">'+ic('search',15)+'</button>'+(can('empEdit')?'<button class="icon-btn" data-eredit="'+r.id+'" title="Edit">'+ic('edit',15)+'</button><button class="icon-btn" data-erdel="'+r.id+'" title="Delete">'+ic('trash',15)+'</button>':'')+'</td></tr>'
+    +(r.remarks?'<tr><td></td><td colspan="6" style="padding:0 12px 10px;font-size:11.5px;color:var(--muted);">'+ic('msg',11)+' '+esc(r.remarks)+'</td></tr>':'');}).join('');
+  return head+bar+'<div class="tablewrap card" style="overflow-x:auto;"><table style="min-width:760px;width:100%;"><thead><tr style="background:#F8F9FB;"><th style="padding-left:12px;">Date</th><th>Employee</th><th>Activity</th><th>Revenue</th><th>Hours</th><th>Productivity</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+/* ---------- dashboard ---------- */
+function viewEmpDashboard(){
+  var scope=empScope();
+  var n=scope.length;
+  var avgProd=n?Math.round(scope.reduce(function(s,r){return s+(r.productivity||0);},0)/n):0;
+  var totRev=scope.reduce(function(s,r){return s+(Number(r.revenue)||0);},0);
+  var totHours=scope.reduce(function(s,r){return s+(Number(r.workingHours)||0);},0);
+  var totClosed=scope.reduce(function(s,r){return s+(Number(r.inquiriesClosed)||0);},0);
+  function tile(l,v,i,cl){return '<div class="card dtile"><span class="dico" style="background:'+cl+'1A;color:'+cl+';">'+ic(i,17)+'</span><div style="font-size:12px;color:var(--muted);font-weight:600;padding-right:38px;line-height:1.3;">'+l+'</div><div style="font-size:26px;font-weight:800;color:'+cl+';letter-spacing:-.6px;margin-top:8px;">'+v+'</div></div>';}
+  var cards='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px;">'
+    +tile('Reports',n,'doc','var(--ink)')
+    +tile('Avg productivity',avgProd+'%','trend',empColor(avgProd))
+    +tile('Revenue added',money(totRev),'award','var(--done)')
+    +tile('Inquiries closed',totClosed,'check','var(--accent)')
+    +tile('Working hours',totHours+'h','clock','var(--blue)')+'</div>';
+  /* totals per metric */
+  function sumK(k){return scope.reduce(function(s,r){return s+(Number(r[k])||0);},0);}
+  var mt=EMP_METRICS.map(function(m){return '<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:7px 0;border-bottom:1px solid var(--lineSoft);"><span style="color:var(--ink2);">'+esc(m.label)+'</span><b>'+sumK(m.k)+'</b></div>';}).join('');
+  var totalsCard='<div class="card" style="padding:16px 18px;flex:1;min-width:260px;"><div style="font-weight:700;font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Activity totals</div>'+mt+'</div>';
+  /* per-employee */
+  var byEmp={};scope.forEach(function(r){var k=r.empId||r.empName;if(!byEmp[k])byEmp[k]={name:r.empName,n:0,prod:0,rev:0,closed:0};var e=byEmp[k];e.n++;e.prod+=(r.productivity||0);e.rev+=(Number(r.revenue)||0);e.closed+=(Number(r.inquiriesClosed)||0);});
+  var empRows=Object.keys(byEmp).map(function(k){var e=byEmp[k];var ap=e.n?Math.round(e.prod/e.n):0;return {name:e.name,n:e.n,ap:ap,rev:e.rev,closed:e.closed};}).sort(function(a,b){return b.ap-a.ap;});
+  var perEmp=empRows.length?('<div class="card" style="padding:0;overflow:hidden;flex:2;min-width:320px;"><div style="padding:14px 16px;border-bottom:1px solid var(--lineSoft);font-weight:700;font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);">Team — average productivity</div><div class="tablewrap" style="overflow-x:auto;"><table style="min-width:420px;width:100%;"><thead><tr style="background:#F8F9FB;"><th style="padding-left:16px;">Employee</th><th style="text-align:center;">Reports</th><th>Avg productivity</th><th style="text-align:right;">Revenue</th><th style="text-align:center;">Closed</th></tr></thead><tbody>'
+    +empRows.map(function(e){return '<tr class="row" style="border-top:1px solid var(--lineSoft);"><td style="padding:11px 16px;font-weight:600;font-size:12.5px;">'+esc(e.name)+'</td><td style="padding:11px 12px;text-align:center;font-size:12px;">'+e.n+'</td><td style="padding:11px 12px;"><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;max-width:140px;height:8px;background:var(--lineSoft);border-radius:6px;overflow:hidden;"><i style="display:block;height:100%;width:'+Math.min(100,e.ap)+'%;background:'+empColor(e.ap)+';"></i></div><b style="color:'+empColor(e.ap)+';">'+e.ap+'%</b></div></td><td style="padding:11px 12px;text-align:right;font-size:12px;font-weight:700;">'+money(e.rev)+'</td><td style="padding:11px 12px;text-align:center;">'+e.closed+'</td></tr>';}).join('')
+    +'</tbody></table></div></div>'):'';
+  var bar='<div class="filterbar"><div class="fld"><label>Month</label>'+empMonthSel('emp_month')+'</div><div class="fld"><label>Employee</label>'+empSel('emp_emp')+'</div></div>';
+  var head='<div style="font-weight:700;font-size:18px;letter-spacing:-.3px;margin:2px 0 4px;">Employee Report — Dashboard</div><div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Daily productivity, activity and revenue by salesman.</div>';
+  return head+bar+cards+'<div style="display:flex;gap:14px;flex-wrap:wrap;">'+perEmp+totalsCard+'</div>';
+}
+
+/* ---------- employees tab ---------- */
+function viewEmployees(){
+  var list=(state.employees||[]).slice().sort(function(a,b){return (a.name||'').toLowerCase()<(b.name||'').toLowerCase()?-1:1;});
+  var head='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin:2px 0 12px;"><div><div style="font-weight:700;font-size:18px;letter-spacing:-.3px;">Employees</div><div style="font-size:12.5px;color:var(--muted);margin-top:2px;">'+list.length+' employee'+(list.length===1?'':'s')+'</div></div>'+(can('empManage')?'<button class="btn btn-primary" data-empnew="1">'+ic('plus',15)+' Add employee</button>':'')+'</div>';
+  if(!list.length)return head+'<div class="card" style="padding:30px;text-align:center;color:var(--muted);font-size:13.5px;">No employees yet.'+(can('empManage')?' Click <b>Add employee</b> to add your salesman.':'')+'</div>';
+  var rows=list.map(function(e){var cnt=(state.empReports||[]).filter(function(r){return r.empId===e.id;}).length;return '<tr class="row" style="border-top:1px solid var(--lineSoft);"><td style="padding:12px;font-weight:600;font-size:13px;">'+esc(e.name)+'</td><td style="padding:12px;font-size:12px;color:var(--ink2);">'+esc(e.role||'—')+'</td><td style="padding:12px;">'+(e.active!==false?'<span class="chip" style="background:var(--doneBg);color:var(--done);">Active</span>':'<span class="chip" style="background:#F1F3F5;color:var(--ink2);">Inactive</span>')+'</td><td style="padding:12px;text-align:center;font-size:12px;">'+cnt+'</td><td style="padding:12px;text-align:right;">'+(can('empManage')?'<button class="icon-btn" data-empedit="'+e.id+'" title="Edit">'+ic('edit',15)+'</button>':'')+'</td></tr>';}).join('');
+  return head+'<div class="tablewrap card" style="overflow-x:auto;"><table style="min-width:560px;width:100%;"><thead><tr style="background:#F8F9FB;"><th style="padding-left:12px;">Name</th><th>Role</th><th>Status</th><th style="text-align:center;">Reports</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+/* ---------- settings (targets) ---------- */
+function viewEmpSettings(){
+  var mode=(EMP_TARGET_MODE==='monthly')?'per month':'per day';
+  var metricCards=EMP_METRICS.map(function(m){return '<div style="position:relative;border:1px solid var(--lineSoft);border-radius:10px;padding:10px 12px;background:#FBFCFD;">'
+    +'<label class="field-label" style="padding-right:20px;">'+esc(m.label)+' <span style="color:var(--muted);font-weight:400;">('+mode+')</span></label>'
+    +'<input type="number" min="0" step="any" id="etg_'+m.k+'" value="'+esc(EMP_TARGETS[m.k]||0)+'"/>'
+    +(EMP_TARGET_MODE==='monthly'?'<div style="font-size:10.5px;color:var(--muted);margin-top:3px;">\u2248 '+fmtTgt(empDailyTarget(m.k,today()))+' / day</div>':'')
+    +'<button class="icon-btn" data-empmetricdel="'+m.k+'" title="Remove column" style="position:absolute;top:6px;right:6px;color:var(--muted);">'+ic('x',14)+'</button></div>';}).join('');
+  var fixed=[{k:'revenue',label:'Revenue added (SAR)'},{k:'workingHours',label:'Working hours'}].map(function(m){return '<div style="border:1px solid var(--lineSoft);border-radius:10px;padding:10px 12px;background:#F6F8FB;"><label class="field-label">'+esc(m.label)+' <span style="color:var(--muted);font-weight:400;">('+mode+')</span></label><input type="number" min="0" step="any" id="etg_'+m.k+'" value="'+esc(EMP_TARGETS[m.k]||0)+'"/>'+(EMP_TARGET_MODE==='monthly'?'<div style="font-size:10.5px;color:var(--muted);margin-top:3px;">\u2248 '+fmtTgt(empDailyTarget(m.k,today()))+' / day</div>':'')+'</div>';}).join('');
+  var head='<div style="font-weight:700;font-size:18px;letter-spacing:-.3px;margin:2px 0 12px;">Report settings</div>';
+  var wd=workingDaysInMonth(ymNow());
+  var seg='<div class="seg" style="margin-bottom:6px;"><button type="button" data-emptmode="daily" class="'+(EMP_TARGET_MODE==='daily'?'on':'')+'">Daily targets</button><button type="button" data-emptmode="monthly" class="'+(EMP_TARGET_MODE==='monthly'?'on':'')+'">Monthly targets</button></div>';
+  var note=EMP_TARGET_MODE==='monthly'?('<div style="font-size:12px;color:var(--accentDk);background:var(--accentBg);border-radius:9px;padding:9px 12px;margin:4px 0 14px;">Monthly targets are divided across each month\u2019s <b>working days</b> (Fridays excluded) to get the daily goal. '+ymLabel(ymNow())+' has <b>'+wd+' working days</b>.</div>'):'<div style="font-size:12px;color:var(--muted);margin:4px 0 14px;">These are per-day goals. Switch to <b>Monthly targets</b> to enter a month total that is auto-divided across ~26 working days (Fridays excluded).</div>';
+  var addrow='<div class="formsec"><span class="sq"></span>Add a column</div><div class="addrow"><input id="emp_newmetric" placeholder="New column name, e.g. Cold calls, Site visits, Samples sent"/><button class="btn btn-ghost" data-empmetricadd="1">'+ic('plus',14)+' Add column</button></div>';
+  return head+'<div class="setcard"><h3><span class="sq"></span>Productivity columns &amp; targets</h3><div class="desc">These are the columns a salesman fills each day. Add your own (Cold calls, visits\u2026), remove ones you don\u2019t use, and set each target. Productivity % is the average achievement across all columns (capped at 100% each).</div>'
+    +seg+note
+    +'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;">'+metricCards+fixed+'</div>'
+    +addrow
+    +'<div style="margin-top:16px;"><button class="btn btn-primary" data-etgsave="1">'+ic('check',15)+' Save targets</button></div></div>';
+}
+function saveEmpTargets(){var fields=EMP_METRICS.map(function(m){return m.k;}).concat(['revenue','workingHours']);fields.forEach(function(k){var e=document.getElementById('etg_'+k);if(e)EMP_TARGETS[k]=Number(e.value)||0;});toast('Targets saved');apiSaveAll();render();}
+
+function openEmpReportView(id){var r=empFind(id);if(!r)return;state.modalOpen=true;
+  var mrow=function(label,actual,tgt,fmt){fmt=fmt||function(x){return x;};var t=Number(tgt)||0;var pct=t>0?Math.min(100,Math.round(actual/t*100)):0;var col=empColor(pct);return '<div style="display:grid;grid-template-columns:160px 1fr 120px;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid var(--lineSoft);"><div style="font-size:12.5px;color:var(--ink2);">'+label+'</div><div style="height:8px;background:var(--lineSoft);border-radius:6px;overflow:hidden;"><i style="display:block;height:100%;width:'+pct+'%;background:'+col+';border-radius:6px;"></i></div><div style="text-align:right;font-size:12.5px;"><b>'+fmt(actual)+'</b> <span style="color:var(--muted);">/ '+fmt(t)+'</span> <span style="color:'+col+';font-weight:700;">'+pct+'%</span></div></div>';};
+  var p=r.productivity||0;
+  var rows=EMP_METRICS.map(function(m){return mrow(m.label,Number(r[m.k])||0,empDailyTarget(m.k,r.date));}).join('')
+    +mrow('Revenue added',Number(r.revenue)||0,empDailyTarget('revenue',r.date),function(x){return money(x);})
+    +mrow('Working hours',Number(r.workingHours)||0,empDailyTarget('workingHours',r.date),function(x){return x+'h';});
+  var body='<div style="padding:20px 24px;max-height:74vh;overflow:auto;">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;"><div><div style="font-size:16px;font-weight:800;">'+esc(r.empName)+'</div><div style="font-size:12.5px;color:var(--muted);">'+humanFull(r.date)+(EMP_TARGET_MODE==="monthly"?" \u00b7 daily share of monthly targets":"")+'</div></div>'
+    +'<div style="text-align:center;"><div style="font-size:34px;font-weight:800;color:'+empColor(p)+';line-height:1;">'+p+'%</div><div style="font-size:10.5px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;">Productivity</div></div></div>'
+    +'<div style="height:10px;background:var(--lineSoft);border-radius:8px;overflow:hidden;margin-bottom:18px;"><i style="display:block;height:100%;width:'+Math.min(100,p)+'%;background:'+empColor(p)+';border-radius:8px;"></i></div>'
+    +rows
+    +(r.otherActivity?'<div style="margin-top:14px;"><div style="font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Other activity</div><div style="font-size:13px;">'+esc(r.otherActivity)+'</div></div>':'')
+    +(r.remarks?'<div style="margin-top:14px;border-left:3px solid var(--accent);background:var(--accentBg);padding:10px 13px;border-radius:0 8px 8px 0;"><div style="font-size:10.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--accentDk);margin-bottom:4px;">Remarks</div><div style="font-size:13px;color:var(--ink);">'+esc(r.remarks)+'</div></div>':'')
+    +'</div>';
+  document.getElementById('overlay').innerHTML='<div class="overlay" data-close="1"><div class="modal" data-stop="1" style="max-width:640px;"><div class="mh"><span class="mt">Daily report</span><button class="icon-btn" data-close="1">'+ic('x',17)+'</button></div>'+body+'<div style="padding:14px 24px;border-top:1px solid var(--lineSoft);display:flex;justify-content:flex-end;gap:10px;">'+(can('empEdit')?'<button class="btn btn-ghost" data-eredit="'+r.id+'">Edit</button>':'')+'<button class="btn btn-primary" data-erprint="'+r.id+'">'+ic('download',15)+' Print</button></div></div></div>';
+  enhanceAll(document.getElementById('overlay'));
+}
+function empReportHTML(r){
+  var C={slate:'#20232E',gold:'#B88610',ink:'#262B36',muted:'#8A93A2',line:'#EAECF1',soft:'#FBFAF6'};var p=r.productivity||0;var pc=p>=75?'#2E7D52':p>=50?'#B88610':'#C0392B';
+  var row=function(label,a,t,fmt){fmt=fmt||function(x){return x;};t=Number(t)||0;var pct=t>0?Math.min(100,Math.round(a/t*100)):0;return '<tr><td>'+label+'</td><td class="r">'+fmt(a)+'</td><td class="r">'+fmt(t)+'</td><td class="r"><b style="color:'+(pct>=75?'#2E7D52':pct>=50?'#B88610':'#C0392B')+'">'+pct+'%</b></td></tr>';};
+  var rows=EMP_METRICS.map(function(m){return row(m.label,Number(r[m.k])||0,empDailyTarget(m.k,r.date));}).join('')
+    +row('Revenue added (SAR)',Number(r.revenue)||0,empDailyTarget('revenue',r.date),function(x){return money(x).replace('SAR ','');})
+    +row('Working hours',Number(r.workingHours)||0,empDailyTarget('workingHours',r.date),function(x){return x+'h';});
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><title> </title><style>@page{margin:0;}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact;}html,body{margin:0;}body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:'+C.ink+';font-size:12px;}'
+    +'.sheet{min-height:200mm;display:flex;flex-direction:column;}'
+    +'.lh{background:'+C.slate+';color:#fff;padding:18px 26px;display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid '+C.gold+';}'
+    +'.lh .l{display:flex;gap:14px;align-items:center;}.lh img{width:54px;height:54px;border-radius:10px;background:#000;object-fit:cover;}.lh h1{margin:0;font-size:20px;font-weight:800;}.lh .sub{font-size:10.5px;color:#C2C9D6;margin-top:3px;}.lh .t{font-size:15pt;font-weight:800;letter-spacing:2px;color:'+C.gold+';text-align:right;}'
+    +'.body{flex:1 0 auto;padding:22px 26px;}'
+    +'.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}'
+    +'.who .co{font-size:17pt;font-weight:800;}.who .ln{font-size:11pt;color:#5a6476;margin-top:3px;}'
+    +'.pbox{text-align:center;}.pbox .v{font-size:30pt;font-weight:800;color:'+pc+';line-height:1;}.pbox .l{font-size:8pt;letter-spacing:1px;text-transform:uppercase;color:'+C.muted+';}'
+    +'table{width:100%;border-collapse:collapse;}thead th{background:'+C.slate+';color:#fff;font-size:8.5pt;text-transform:uppercase;letter-spacing:.5px;padding:9px 10px;text-align:left;}thead th.r{text-align:right;}td{padding:8px 10px;border-bottom:1px solid '+C.line+';font-size:10.5pt;}td.r{text-align:right;}tbody tr:nth-child(even){background:'+C.soft+';}'
+    +'.note{margin-top:14px;font-size:10.5pt;color:#54607a;border-left:3px solid '+C.gold+';background:'+C.soft+';padding:10px 13px;border-radius:0 8px 8px 0;}'
+    +'.ft{border-top:2.5px solid '+C.gold+';margin-top:22px;padding:11px 26px;font-size:9pt;color:#5a6476;display:flex;justify-content:space-between;}'
+    +'@media screen{body{width:794px;margin:0 auto;}.sheet{box-shadow:0 0 0 1px #eee;}}'
+    +'</style></head><body><div class="sheet">'
+    +'<div class="lh"><div class="l"><img src="'+LOGO+'"/><div><h1>KSA PALLETS</h1><div class="sub">A Division of Zeeta Contracting Company</div></div></div><div class="t">DAILY REPORT</div></div>'
+    +'<div class="body"><div class="top"><div class="who"><div class="co">'+esc(r.empName)+'</div><div class="ln">'+humanFull(r.date)+'</div></div><div class="pbox"><div class="v">'+p+'%</div><div class="l">Productivity</div></div></div>'
+    +'<table><thead><tr><th>Activity</th><th class="r">Actual</th><th class="r">Target</th><th class="r">%</th></tr></thead><tbody>'+rows+'</tbody></table>'
+    +(r.otherActivity?'<div style="margin-top:12px;font-size:10.5pt;"><b>Other activity:</b> '+esc(r.otherActivity)+'</div>':'')
+    +(r.remarks?'<div class="note"><b>Remarks:</b> '+esc(r.remarks)+'</div>':'')
+    +'</div>'
+    +'<div class="ft"><span><b>KSA PALLETS</b> \u00b7 '+esc(QUOTE_FROM.web)+'</span><span>Daily report \u00b7 '+humanFull(r.date)+'</span></div>'
+    +'</div></body></html>';
+}
+function printEmpReport(id){var r=empFind(id);if(!r)return;var w=window.open('','_blank');if(!w){alert('Please allow pop-ups to print.');return;}w.document.write(empReportHTML(r));w.document.close();setTimeout(function(){w.focus();w.print();},400);}
+function empMonthData(empId,ym){
+  var reps=(state.empReports||[]).filter(function(r){return r.empId===empId&&(r.date||'').slice(0,7)===ym;});
+  var wd=workingDaysInMonth(ym);
+  var keys=EMP_METRICS.map(function(m){return m.k;}).concat(['revenue','workingHours']);
+  var totals={},tgt={},ach=[];
+  keys.forEach(function(k){var tot=reps.reduce(function(s,r){return s+(Number(r[k])||0);},0);var mt=EMP_TARGET_MODE==='monthly'?(Number(EMP_TARGETS[k])||0):(Number(EMP_TARGETS[k])||0)*wd;totals[k]=tot;tgt[k]=mt;if(mt>0)ach.push(Math.min(tot/mt,1));});
+  var prod=ach.length?Math.round(ach.reduce(function(a,b){return a+b;},0)/ach.length*100):0;
+  return {reps:reps,totals:totals,tgt:tgt,prod:prod,wd:wd,days:reps.length};
+}
+function viewEmpMonthly(){
+  var ym=state.empF.month||ymNow();if(!state.empF.month)state.empF.month=ym;
+  var empId=state.empF.empId||'All';
+  var bar='<div class="filterbar"><div class="fld"><label>Month</label>'+empMonthSel('emp_month')+'</div><div class="fld"><label>Employee</label>'+empSel('emp_emp')+'</div></div>';
+  var head='<div style="font-weight:700;font-size:18px;letter-spacing:-.3px;margin:2px 0 4px;">Monthly Analysis — '+ymLabel(ym)+'</div><div style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Month totals vs the monthly target'+(EMP_TARGET_MODE==='monthly'?'':' (daily target × '+workingDaysInMonth(ym)+' working days)')+'. '+workingDaysInMonth(ym)+' working days (Fridays excluded).</div>';
+  if(empId==='All'){
+    var list=(state.employees||[]).map(function(e){var d=empMonthData(e.id,ym);return {name:e.name,d:d};}).filter(function(x){return x.d.days>0;}).sort(function(a,b){return b.d.prod-a.d.prod;});
+    if(!list.length)return head+bar+'<div class="card" style="padding:28px;text-align:center;color:var(--muted);font-size:13.5px;">No reports this month. Pick an employee, or add daily reports.</div>';
+    var rows=list.map(function(x){var d=x.d;return '<tr class="row" style="border-top:1px solid var(--lineSoft);"><td style="padding:12px;font-weight:600;font-size:13px;">'+esc(x.name)+'</td><td style="padding:12px;text-align:center;font-size:12px;">'+d.days+' / '+d.wd+'</td><td style="padding:12px;"><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;max-width:160px;height:8px;background:var(--lineSoft);border-radius:6px;overflow:hidden;"><i style="display:block;height:100%;width:'+Math.min(100,d.prod)+'%;background:'+empColor(d.prod)+';"></i></div><b style="color:'+empColor(d.prod)+';">'+d.prod+'%</b></div></td><td style="padding:12px;text-align:right;font-size:12px;font-weight:700;">'+money(d.totals.revenue||0)+'</td><td style="padding:12px;text-align:center;">'+(d.totals.inquiriesClosed||0)+'</td></tr>';}).join('');
+    return head+bar+'<div class="tablewrap card" style="overflow-x:auto;"><table style="min-width:520px;width:100%;"><thead><tr style="background:#F8F9FB;"><th style="padding-left:12px;">Employee</th><th style="text-align:center;">Days reported</th><th>Monthly productivity</th><th style="text-align:right;">Revenue</th><th style="text-align:center;">Closed</th></tr></thead><tbody>'+rows+'</tbody></table></div><div style="font-size:11.5px;color:var(--muted);margin-top:10px;">Select a single employee above for the full metric-by-metric breakdown.</div>';
+  }
+  var emp=employeeFind(empId);var d=empMonthData(empId,ym);
+  var mrow=function(label,actual,tgt,fmt){fmt=fmt||function(x){return x;};var t=Number(tgt)||0;var pct=t>0?Math.min(100,Math.round(actual/t*100)):0;var col=empColor(pct);return '<div style="display:grid;grid-template-columns:170px 1fr 150px;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--lineSoft);"><div style="font-size:12.5px;color:var(--ink2);">'+label+'</div><div style="height:9px;background:var(--lineSoft);border-radius:6px;overflow:hidden;"><i style="display:block;height:100%;width:'+pct+'%;background:'+col+';border-radius:6px;"></i></div><div style="text-align:right;font-size:12.5px;"><b>'+fmt(actual)+'</b> <span style="color:var(--muted);">/ '+fmt(t)+'</span> <span style="color:'+col+';font-weight:700;">'+pct+'%</span></div></div>';};
+  var rows=EMP_METRICS.map(function(m){return mrow(m.label,d.totals[m.k]||0,d.tgt[m.k]);}).join('')
+    +mrow('Revenue added',d.totals.revenue||0,d.tgt.revenue,function(x){return money(x);})
+    +mrow('Working hours',d.totals.workingHours||0,d.tgt.workingHours,function(x){return x+'h';});
+  var hero='<div class="card" style="padding:18px 20px;margin-bottom:16px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;"><div><div style="font-size:16px;font-weight:800;">'+esc(emp?emp.name:'—')+'</div><div style="font-size:12px;color:var(--muted);">'+ymLabel(ym)+' · '+d.days+' of '+d.wd+' working days reported</div></div><div style="flex:1;min-width:160px;"><div style="height:12px;background:var(--lineSoft);border-radius:8px;overflow:hidden;"><i style="display:block;height:100%;width:'+Math.min(100,d.prod)+'%;background:'+empColor(d.prod)+';border-radius:8px;"></i></div></div><div style="text-align:center;"><div style="font-size:32px;font-weight:800;color:'+empColor(d.prod)+';line-height:1;">'+d.prod+'%</div><div style="font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);">Monthly productivity</div></div></div>';
+  if(!d.days)return head+bar+'<div class="card" style="padding:28px;text-align:center;color:var(--muted);font-size:13.5px;">No reports for '+esc(emp?emp.name:'')+' in '+ymLabel(ym)+'.</div>';
+  return head+bar+hero+'<div class="card" style="padding:16px 20px;"><div style="font-weight:700;font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Metric vs monthly target</div>'+rows+'</div>';
+}
+function _renderEmp(v){
+  var tabs=[['dashboard','grid','Dashboard'],['reports','doc','Daily Reports'],['monthly','trend','Monthly'],['employees','users','Employees']];
+  if(state.role==='admin'||can('empManage'))tabs.push(['settings','gear','Targets']);
+  if(tabs.map(function(x){return x[0];}).indexOf(state.empTab)<0)state.empTab='dashboard';
+  document.getElementById('tabbar').innerHTML=tabs.map(function(x){return '<button data-emptab="'+x[0]+'" class="'+(state.empTab===x[0]?'on':'')+'">'+ic(x[1],17)+x[2]+'</button>';}).join('');
+  v.innerHTML=state.empTab==='reports'?viewEmpReports():state.empTab==='monthly'?viewEmpMonthly():state.empTab==='employees'?viewEmployees():state.empTab==='settings'?viewEmpSettings():viewEmpDashboard();
+  enhanceAll(v);
+}
+
 function reportHTML(){
   var list=filteredClients();var A=analytics(list);
   var INK='#242A38',MUT='#7A828F',HAIR='#E7E9EE',GOLD='#B8860B';
@@ -3306,7 +3630,7 @@ function doExportCSV(){
 
 /* ---------- sync ---------- */
 function setSync(msg){document.getElementById('syncrow').innerHTML='<span style="color:'+(LIVE?'var(--done)':'var(--blue)')+';display:flex;">'+ic('refresh',13)+'</span> '+msg+(LIVE?' <button class="icon-btn" id="btnRefresh" title="Refresh" style="margin-left:2px;">'+ic('refresh',14)+'</button>':'');var b=document.getElementById('btnRefresh');if(b)b.onclick=pull;}
-async function pull(){try{var data=await apiGet()||{};applySettings(data.settings);state.clients=mergeClients(data.clients,state.clients);state.activity=toArr(data.activity);state.quotes=toArr(data.quotes);state.prospects=toArr(data.prospects);state.coas=mergeKeep(data.coas,state.coas);state.pos=mergeKeep(data.pos,state.pos);state.sales=mergeKeep(data.sales,state.sales);state.reminders=toArr(data.reminders);state.dns=mergeKeep(data.dns,state.dns);state.dnCompanies=mergeKeep(data.dnCompanies,state.dnCompanies);state.soas=mergeKeep(data.soas,state.soas);migrateAllProspects();render();setSync('Live · synced '+stamp()+'.');}catch(e){setSync('Saved locally — sync will retry.');}}
+async function pull(){try{var data=await apiGet()||{};applySettings(data.settings);state.clients=mergeClients(data.clients,state.clients);state.activity=toArr(data.activity);state.quotes=toArr(data.quotes);state.prospects=toArr(data.prospects);state.coas=mergeKeep(data.coas,state.coas);state.pos=mergeKeep(data.pos,state.pos);state.sales=mergeKeep(data.sales,state.sales);state.reminders=toArr(data.reminders);state.dns=mergeKeep(data.dns,state.dns);state.dnCompanies=mergeKeep(data.dnCompanies,state.dnCompanies);state.soas=mergeKeep(data.soas,state.soas);state.employees=mergeKeep(data.employees,state.employees);state.empReports=mergeKeep(data.empReports,state.empReports);migrateAllProspects();render();setSync('Live · synced '+stamp()+'.');}catch(e){setSync('Saved locally — sync will retry.');}}
 
 /* ============================================================ EVENTS ============================================================ */
 document.getElementById('btnAdd').innerHTML=ic('plus',15)+' Add inquiry';
@@ -3365,6 +3689,21 @@ document.addEventListener('click',function(e){
   var coatab=e.target.closest('[data-coatab]');if(coatab){e.preventDefault();state.coaTab=coatab.getAttribute('data-coatab');render();return;}
   if(e.target.closest('[data-coanew]')){e.preventDefault();openCOA(null);return;}
   var ctn=e.target.closest('[data-coatplnew]');if(ctn){e.preventDefault();openCOAFromTemplate(ctn.getAttribute('data-coatplnew'));return;}
+  var emptab=e.target.closest('[data-emptab]');if(emptab){e.preventDefault();state.empTab=emptab.getAttribute('data-emptab');render();return;}
+  if(e.target.closest('[data-ernew]')){e.preventDefault();openEmpReport(null);return;}
+  var erv=e.target.closest('[data-erview]');if(erv){e.preventDefault();openEmpReportView(erv.getAttribute('data-erview'));return;}
+  var erp=e.target.closest('[data-erprint]');if(erp){e.preventDefault();printEmpReport(erp.getAttribute('data-erprint'));return;}
+  var etm=e.target.closest('[data-emptmode]');if(etm){e.preventDefault();EMP_TARGET_MODE=etm.getAttribute('data-emptmode');apiSaveAll();render();return;}
+  var ered=e.target.closest('[data-eredit]');if(ered){e.preventDefault();openEmpReport(ered.getAttribute('data-eredit'));return;}
+  var erdl=e.target.closest('[data-erdel]');if(erdl){e.preventDefault();delEmpReport(erdl.getAttribute('data-erdel'));return;}
+  if(e.target.closest('[data-ersave]')){e.preventDefault();saveEmpReport();return;}
+  if(e.target.closest('[data-empnew]')){e.preventDefault();openEmployee(null);return;}
+  var emped=e.target.closest('[data-empedit]');if(emped){e.preventDefault();openEmployee(emped.getAttribute('data-empedit'));return;}
+  if(e.target.closest('[data-empsave]')){e.preventDefault();saveEmployee();return;}
+  var empdl=e.target.closest('[data-empdel]');if(empdl){e.preventDefault();delEmployee(empdl.getAttribute('data-empdel'));return;}
+  if(e.target.closest('[data-empmetricadd]')){e.preventDefault();addEmpMetric();return;}
+  var emm=e.target.closest('[data-empmetricdel]');if(emm){e.preventDefault();removeEmpMetric(emm.getAttribute('data-empmetricdel'));return;}
+  if(e.target.closest('[data-etgsave]')){e.preventDefault();saveEmpTargets();return;}
   if(e.target.closest('[data-soanew]')){e.preventDefault();openSoa(null);return;}
   var soae=e.target.closest('[data-soaedit]');if(soae){e.preventDefault();openSoa(soae.getAttribute('data-soaedit'));return;}
   var soav=e.target.closest('[data-soaview]');if(soav){e.preventDefault();viewSoaPDF(soav.getAttribute('data-soaview'));return;}
@@ -3514,6 +3853,9 @@ document.addEventListener('mouseout',function(e){var c=e.target.closest('[data-n
 /* filters + search + editable follow-up dates */
 document.addEventListener('change',function(e){
   var id=e.target.id;
+  if(id==='emp_month'){state.empF.month=e.target.value;render();return;}
+  if(id==='emp_emp'){state.empF.empId=e.target.value;render();return;}
+  if(id==='er_prod_auto'){empRecalcLive();return;}
   if(e.target.getAttribute&&e.target.getAttribute('data-soacol')!=null){readSoaForm();renderSoa();return;}
   if(id==='dn_month'){state.dnMonth=e.target.value;render();return;}
   if(id==='sales_month'){state.salesF=state.salesF||{};state.salesF.month=e.target.value;render();return;}
@@ -3582,6 +3924,8 @@ document.addEventListener('input',function(e){function keepFocus(id,fn){var el=e
   else if(e.target.id==='po_search'){keepFocus('po_search',function(){state.poF=state.poF||{search:''};state.poF.search=e.target.value;document.getElementById('view').innerHTML=viewPOs();enhanceAll(document.getElementById('view'));});}
   else if(e.target.id==='dn_search'){keepFocus('dn_search',function(){state.dnF=state.dnF||{search:''};state.dnF.search=e.target.value;document.getElementById('view').innerHTML=viewDns();enhanceAll(document.getElementById('view'));});}
   else if(e.target.id==='soa_search'){keepFocus('soa_search',function(){state.soaF=state.soaF||{search:''};state.soaF.search=e.target.value;document.getElementById('view').innerHTML=viewSoas();enhanceAll(document.getElementById('view'));});}
+  else if(e.target.id==='emp_search'){keepFocus('emp_search',function(){state.empF.search=e.target.value;document.getElementById('view').innerHTML=viewEmpReports();enhanceAll(document.getElementById('view'));});}
+  else if(e.target.id&&e.target.id.indexOf('er_')===0){empRecalcLive();}
   else if(e.target.id==='dncomp_search'){keepFocus('dncomp_search',function(){state.dnCompF=e.target.value;document.getElementById('view').innerHTML=viewDnCompanies();enhanceAll(document.getElementById('view'));});}
   else if(e.target.id==='comp_search'){keepFocus('comp_search',function(){state.compSearch=e.target.value;document.getElementById('view').innerHTML=viewCompanies();enhanceAll(document.getElementById('view'));});}
   else if(e.target.id==='sales_search'){keepFocus('sales_search',function(){state.salesF=state.salesF||{month:'',product:'All',search:''};state.salesF.search=e.target.value;document.getElementById('view').innerHTML=viewSales();enhanceAll(document.getElementById('view'));});}});
@@ -3602,8 +3946,8 @@ async function boot(){
     LIVE=true;
     document.getElementById('modebadge').textContent='Live · Firebase';
     setSync('Connecting to Firebase…');
-    window.onKsaSnapshot=function(data){ if(!state.modalOpen){ try{ data=data||{}; applySettings(data.settings); state.clients=mergeClients(data.clients,state.clients); state.activity=toArr(data.activity); state.quotes=mergeKeep(data.quotes,state.quotes); state.prospects=toArr(data.prospects); state.coas=mergeKeep(data.coas,state.coas); state.pos=mergeKeep(data.pos,state.pos); state.sales=mergeKeep(data.sales,state.sales); state.reminders=toArr(data.reminders); state.dns=mergeKeep(data.dns,state.dns); state.dnCompanies=mergeKeep(data.dnCompanies,state.dnCompanies); state.soas=mergeKeep(data.soas,state.soas); migrateAllProspects(); render(); setSync('Live · synced '+stamp()+'.'); }catch(err){ console.error('snapshot render failed:',err); setSync('Loaded — some data needed cleanup.'); } } };
-    try{ var d=await apiGet()||{}; applySettings(d.settings); state.clients=toArr(d.clients); state.activity=toArr(d.activity); state.quotes=toArr(d.quotes); state.prospects=toArr(d.prospects); state.coas=toArr(d.coas); state.pos=toArr(d.pos); state.sales=toArr(d.sales); state.reminders=toArr(d.reminders); state.dns=toArr(d.dns); state.dnCompanies=toArr(d.dnCompanies); state.soas=toArr(d.soas); migrateAllProspects(); }catch(e){ state.clients=[];state.activity=[];state.quotes=[];state.prospects=[];state.coas=[];state.pos=[];state.sales=[];state.reminders=[];state.dns=[];state.dnCompanies=[];state.soas=[]; }
+    window.onKsaSnapshot=function(data){ if(!state.modalOpen){ try{ data=data||{}; applySettings(data.settings); state.clients=mergeClients(data.clients,state.clients); state.activity=toArr(data.activity); state.quotes=mergeKeep(data.quotes,state.quotes); state.prospects=toArr(data.prospects); state.coas=mergeKeep(data.coas,state.coas); state.pos=mergeKeep(data.pos,state.pos); state.sales=mergeKeep(data.sales,state.sales); state.reminders=toArr(data.reminders); state.dns=mergeKeep(data.dns,state.dns); state.dnCompanies=mergeKeep(data.dnCompanies,state.dnCompanies); state.soas=mergeKeep(data.soas,state.soas); state.employees=mergeKeep(data.employees,state.employees); state.empReports=mergeKeep(data.empReports,state.empReports); migrateAllProspects(); render(); setSync('Live · synced '+stamp()+'.'); }catch(err){ console.error('snapshot render failed:',err); setSync('Loaded — some data needed cleanup.'); } } };
+    try{ var d=await apiGet()||{}; applySettings(d.settings); state.clients=toArr(d.clients); state.activity=toArr(d.activity); state.quotes=toArr(d.quotes); state.prospects=toArr(d.prospects); state.coas=toArr(d.coas); state.pos=toArr(d.pos); state.sales=toArr(d.sales); state.reminders=toArr(d.reminders); state.dns=toArr(d.dns); state.dnCompanies=toArr(d.dnCompanies); state.soas=toArr(d.soas); state.employees=toArr(d.employees); state.empReports=toArr(d.empReports); migrateAllProspects(); }catch(e){ state.clients=[];state.activity=[];state.quotes=[];state.prospects=[];state.coas=[];state.pos=[];state.sales=[];state.reminders=[];state.dns=[];state.dnCompanies=[];state.soas=[];state.employees=[];state.empReports=[]; }
     render(); setSync('Live · synced '+stamp()+'.'); initAuth();
   } else {
     document.getElementById('modebadge').textContent = window.KSA_ERR ? 'Config needed' : 'Preview mode';
@@ -3643,12 +3987,12 @@ if(window.KSA_READY) boot(); else window.addEventListener('ksa-ready', boot);
       const db    = getDatabase(app);
       const board = ref(db, "ksaPallets/board");
       window.KSA_DB = {
-        async getAll(){ const s = await get(board); var v = s.exists()? s.val():{}; return { clients: v.clients||[], activity: v.activity||[], settings: v.settings||null, quotes: v.quotes||[], prospects: v.prospects||[], coas: v.coas||[], pos: v.pos||[], sales: v.sales||[], reminders: v.reminders||[], dns: v.dns||[], dnCompanies: v.dnCompanies||[], soas: v.soas||[] }; },
-        async saveAll(list, activity, settings, quotes, prospects, coas, pos, sales, reminders, dns, dnCompanies, soas){ await set(board, { clients:list, activity:activity||[], settings:settings||null, quotes:quotes||[], prospects:prospects||[], coas:coas||[], pos:pos||[], sales:sales||[], reminders:reminders||[], dns:dns||[], dnCompanies:dnCompanies||[], soas:soas||[], updatedAt: Date.now() }); }
+        async getAll(){ const s = await get(board); var v = s.exists()? s.val():{}; return { clients: v.clients||[], activity: v.activity||[], settings: v.settings||null, quotes: v.quotes||[], prospects: v.prospects||[], coas: v.coas||[], pos: v.pos||[], sales: v.sales||[], reminders: v.reminders||[], dns: v.dns||[], dnCompanies: v.dnCompanies||[], soas: v.soas||[], employees: v.employees||[], empReports: v.empReports||[] }; },
+        async saveAll(list, activity, settings, quotes, prospects, coas, pos, sales, reminders, dns, dnCompanies, soas, employees, empReports){ await set(board, { clients:list, activity:activity||[], settings:settings||null, quotes:quotes||[], prospects:prospects||[], coas:coas||[], pos:pos||[], sales:sales||[], reminders:reminders||[], dns:dns||[], dnCompanies:dnCompanies||[], soas:soas||[], employees:employees||[], empReports:empReports||[], updatedAt: Date.now() }); }
       };
       onValue(board, function(snap){
         var v = snap.exists()? snap.val():{};
-        if(window.onKsaSnapshot) window.onKsaSnapshot({ clients: v.clients||[], activity: v.activity||[], settings: v.settings||null, quotes: v.quotes||[], prospects: v.prospects||[], coas: v.coas||[], pos: v.pos||[], sales: v.sales||[], reminders: v.reminders||[], dns: v.dns||[], dnCompanies: v.dnCompanies||[], soas: v.soas||[] });
+        if(window.onKsaSnapshot) window.onKsaSnapshot({ clients: v.clients||[], activity: v.activity||[], settings: v.settings||null, quotes: v.quotes||[], prospects: v.prospects||[], coas: v.coas||[], pos: v.pos||[], sales: v.sales||[], reminders: v.reminders||[], dns: v.dns||[], dnCompanies: v.dnCompanies||[], soas: v.soas||[], employees: v.employees||[], empReports: v.empReports||[] });
       });
       ready();
     }catch(e){
